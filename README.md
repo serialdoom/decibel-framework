@@ -8,7 +8,7 @@ To get started using this project, take a look at our [API documentation](https:
 
 ## Contributing
 
-Thank you for considering contributing to the Decibel Core framework! The
+Thank you for considering contributing to the Decibel Core! The
 Contribution Guide can be found [here](CONTRIBUTING.md).
 
 ## Security Vulnerabilities
@@ -17,4 +17,4 @@ If you discover a security vulnerability within Decibel Core, please send an e-m
 
 ## License
 
-The Decibel Core framework is open-source software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+Decibel Core is open-source software licensed under the [MIT license](http://opensource.org/licenses/MIT).

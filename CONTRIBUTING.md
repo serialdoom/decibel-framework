@@ -1,4 +1,4 @@
-# How to contribute to Decibel Core Framework
+# How to contribute to Decibel Core
 
 ## Report a bug
 
@@ -24,14 +24,14 @@ that is limited to a single purpose.
 
 ### Minimum PHP Version
 
-The minimal supported version for Decibel Core Framework 7 is PHP 5.5.x, please keep
+The minimal supported version for Decibel Core 7 is PHP 5.5.x, please keep
 this version requirement in mind when contributing a patch to the framework.
 
 ## Running the Tests
 
 ### Before Running the Tests
 
-To run the Decibel tests, install the external requirements used during the
+To run the Decibel Core tests, install the external requirements used during the
 tests. To do so; [install Composer](https://getcomposer.org/download/) and 
 execute the following:
 
@@ -40,8 +40,8 @@ $ composer update
 ```
 ### Running the Tests
  
-After installing the requirements, run the test suite from the Decibel Core Framework
-root directory using the following command:
+After installing the requirements, run the test suite from the Decibel Core root
+directory using the following command:
 
 ```shell
 $ vendor/bin/phpunit
@@ -49,6 +49,6 @@ $ vendor/bin/phpunit
 
 ## Coding Style
 
-Decibel Core Framework follows the 
+Decibel Core follows the 
 [PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md) 
 coding standard.
