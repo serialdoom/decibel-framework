@@ -1,0 +1,15 @@
+/vendor/
+
+.idea/
+.php_cs.cache
+.DS_Store
+
+composer.phar
+composer.lock
+Thumbs.db
+
+*.registry*
+app.*
+
+_build/*
+!_build/.gitkeep

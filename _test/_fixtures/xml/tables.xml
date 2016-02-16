@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tables>
+	<table name="test">
+		<field name="test1" type="bigint" unsigned="true" null="true"/>
+		<field name="test2" type="text" unsigned="true" null="false"/>
+		<field name="test3" type="bigint" unsigned="true" null="false"/>
+	</table>
+</tables>

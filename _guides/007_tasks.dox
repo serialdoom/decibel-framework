@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @defgroup tasks Tasks
+ *
+ * Classes for scheduling and executing tasks.
+ */
+
+/**
+ * @defgroup tasks_queued Task Queues
+ * @ingroup tasks
+ *
+ * Classes for creating and executing task queues.
+ */
+
+/**
+ * @defgroup tasks_rpc Task Remote Procedures
+ * @ingroup tasks
+ *
+ * Remote procedures used to manage and control tasks.
+ */
+
+/**
+ * @defgroup tasks_events Task Events
+ * @ingroup tasks
+ *
+ * Events triggered by tasks.
+ */
+
+/**
+ * @defgroup tasks_logs Task Logs
+ * @ingroup tasks
+ *
+ * Logging functionality for tasks.
+ */
+
+/**
+ * @page tasks Tasks
+ *
+ * Coming soon. If you need assistance with this topic immediately, please
+ * ask a question at http://portal.decibeltechnology.com
+ *
+ * @section tasks_scheduled_cron Scheduled Events Cron Task
+ *
+ */

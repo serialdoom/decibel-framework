@@ -1,0 +1,688 @@
+<?php
+
+/**
+ * @defgroup apps Apps
+ *
+ * This group contains classes necessary to implement and manage custom
+ * Apps within %Decibel.
+ *
+ * Detailed information about creating custom Apps is available
+ * in the @ref app Developer Guide.
+ */
+
+/**
+ * @page app Creating Custom Apps
+ *
+ * Apps are packages of custom components available for use within
+ * %Decibel. Apps are versionable and therefore upgradable. It is possible
+ * to have multiple Apps installed on a single instance of %Decibel.
+ *
+ * When creating custom functionality within %Decibel, the first step
+ * is to create an App that will hold the classes and resources that define
+ * the functionality. The following pages detail the process of creating
+ * an App and describe the functionality available to Apps.
+ *
+ * @section app_naming Naming
+ *
+ * Each App must have a unique name, and reside in a unique namespace
+ * within the main %Decibel {@link app} namespace.
+ *
+ * As %Decibel requires namespaces to match the directory structure
+ * on the file system, all files for the App must be included in a sub-directory
+ * of the <code>app</code> directory, with the same name as the App. See the
+ * @ref app_samplestructure for a visual representation.
+ *
+ * @section	app_requiredcomponents	Required Components
+ *
+ * At a minimum, each App should be composed of two files (the App Definition
+ * and App Manifest), each residing in the root of the App's namespace.
+ *
+ * - @subpage app_definition
+ * - @subpage app_manifests
+ *
+ * @section	app_optionalcomponents	Optional Components
+ *
+ * Aside from custom class definitions, there are a number of other optional
+ * components that may be included to enhance the functionality of the App:
+ *
+ * - @subpage app_registrations
+ * - @subpage app_configurations
+ * - @subpage app_translations
+ * - @subpage app_thirdpartycomponents
+ * - @subpage app_tables
+ * - @subpage app_tests
+ *
+ * @section app_samplestructure	Sample Structure
+ *
+ * The following diagram shows a sample file structure for an App called "MyApp".
+ * This App contains each of the components described in the guide above,
+ * as well as a single model defining a news article.
+ *
+ * @code
+ * \wwwroot
+ *    \- app
+ *         \- MyApp
+ *              |- _3rdparty
+ *              |     \- HelpfulComponent
+ *              |          |- Helpful.php
+ *              |          |- bootstrap.php
+ *              |          \- resources
+ *              |               |- helpful.gif
+ *              |               \- helpful.css
+ *              |- _test
+ *              |     \- MyAppTest.php
+ *              |     \- News
+ *              |          \- ArticleTest.php
+ *              |          \- Article_DefinitionTest.php
+ *              |- _translations
+ *              |     \- en-gb
+ *              |- _view
+ *              |     \- News
+ *              |          \- Article-edit.tpl
+ *              |- MyApp.php
+ *              |- MyApp.config.php
+ *              |- MyApp.info.php
+ *              |- MyApp.manifest.xml
+ *              |- MyApp.tables.xml
+ *              \- News
+ *                   |- Article.php
+ *                   \- Article_Definition.php
+ * @endcode
+ */
+
+/**
+ * @page app_definition	App Definition
+ *
+ * An App Definition provides high level information and functionality
+ * for the App. This includes whether it can be added to backups, whether
+ * it can be uninstalled, and tasks that must be performed upon installation.
+ *
+ * An App Definition must be named <code>[AppName].php</code>
+ * and reside in the App's top-level directory. See the
+ * @ref app_definition_samplestructure for a visual representation.
+ *
+ * The App Definition is a PHP class that resides in the root of the App's
+ * namespace. %Decibel provides the {@link app::decibel::application::DApp DApp}
+ * base class for Apps to extend.
+ *
+ * @section app_definition_example Example
+ *
+ * The following code shows an example of a basic App Definition:
+ *
+ * @code
+ *  namespace app\MyApp;
+ *
+ *  use app\decibel\application\DApp;
+ *
+ *	class MyApp extends DApp {
+ *
+ *	}
+ * @endcode
+ *
+ * @section app_definition_samplestructure Sample Structure
+ *
+ * The following diagram shows the location of the App Definition
+ * (<code>MyApp.php</code>) within a sample file structure
+ * for an App called "MyApp".
+ *
+ * @code
+ * \wwwroot
+ *    \- app
+ *         \- MyApp
+ *              |- MyApp.php
+ *              \- MyApp.manifest.xml
+ * @endcode
+ */
+
+/**
+ * @page app_manifests App Manifest
+ *
+ * App Manifests are XML files that describe the current state, contents
+ * and dependencies of a %Decibel App.
+ *
+ * These manifests are required in order for an App to be placed under version
+ * control and therefore updated using the %Decibel packaging system.
+ *
+ * An App Manifest must be named <code>[App Name].manifest.xml</code>
+ * and reside in the App's top-level directory.
+ *
+ * @warning
+ * If an App does not have a manifest,
+ * a {@link app::decibel::application::debug::DMissingAppManifestException DMissingAppManifestException}
+ * will be thrown. This exception cannot be caught and will halt application execution.
+ *
+ * A basic App Manifest is constructed as follows:
+ *
+ * @code
+ * <?xml version="1.0" encoding="utf-8"?>
+ * <manifest>
+ *
+ * 	<name>MyApp</name>
+ * 	<version>1.1.0</version>
+ * 	<copyright>2012 Author Name</copyright>
+ *
+ * 	<respository method="manual">
+ *		<location>http://www.mywebsite.com/MyRepository.xml</location>
+ * 	</respository>
+ *
+ * 	<authors>
+ * 		<author>
+ * 			<name>Author Name</name>
+ * 			<email>author@domain.com</email>
+ * 		</author>
+ * 	</authors>
+ *
+ * 	<dependencies>
+ * 		<dependency type="app\decibel\packaging\DAppDependency">
+ * 			<name>app\decibel\Decibel</name>
+ * 			<required>6.3.0</required>
+ * 		</dependency>
+ * 	</dependencies>
+ *
+ * 	<changelog>
+ * 		<release version="1.1.0">
+ * 			<change bugid="xxxx">Fixed a bug</change>
+ * 			<change>Changed something</change>
+ * 		</release>
+ * 	</changelog>
+ *
+ * </manifest>
+ * @endcode
+ *
+ * @warning
+ * The <code>\<name\></code> and <code>\<version\></code> elements are required
+ * and a {@link app::decibel::application::debug::DMissingAppManifestDataException DMissingAppManifestDataException}
+ * will be thrown if these elements are missing. This exception cannot be caught
+ * and will halt application execution.
+ *
+ * @section app_manifests_repository Repository
+ *
+ * The <code>\<respository\></code> section instructs %Decibel where
+ * to find updates for the App and how these should be installed.
+ *
+ * @code
+ *  <respository method="manual">
+ *      <location>http://www.mywebsite.com/MyRepository.xml</location>
+ *  </respository>
+ * @endcode
+ *
+ * The <code>method</code> attribute may be set to one of the following values:
+ * - <code>manual</code>: Indicates that the App must be manually updated
+ *		through the %Decibel CMS interface.
+ * - <code>automatic</code>: Allows %Decibel to automatically apply updates
+ *		to the App as they become available.
+ *
+ * @section app_manifests_authors	Authors
+ *
+ * The <code>\<authors\></code> section allows multiple authors
+ * and contributors for the App to be defined, for example:
+ *
+ * @code
+ * 	<authors>
+ * 		<author>
+ * 			<name>First Author</name>
+ * 			<email>firstauthor@domain.com</email>
+ * 		</author>
+ * 		<author>
+ * 			<name>Second Author</name>
+ * 			<email>secondauthor@domain.com</email>
+ * 		</author>
+ * 		<contributor>
+ * 			<name>Contributor Name</name>
+ * 			<email>contributor@domain.com</email>
+ * 		</contributor>
+ * 	</authors>
+ * @endcode
+ *
+ * @section app_manifests_dependencies	Dependencies
+ *
+ * The <code>\<dependencies\></code> section allows an App to define
+ * any %Decibel or system requirements that must be available before
+ * it can be installed.
+ *
+ * @code
+ *	<dependencies>
+ *
+ *		<!-- Dependency on a particular version of PHP. -->
+ *		<dependency type="app\decibel\packaging\DPhpDependency">
+ *			<required>5.4.0</required>
+ *			<recommended>5.4.1</recommended>
+ *		</dependency>
+ *
+ *		<!-- Dependency on another Decibel App, or a particular version
+ *			 of the framework itself. -->
+ *		<dependency type="app\decibel\packaging\DAppDependency">
+ *			<name>app\decibel\Decibel</name>
+ *			<required>6.2.0</required>
+ *		</dependency>
+ *
+ *		<!-- Dependency on a PHP extension. -->
+ *		<dependency type="app\decibel\packaging\DPhpExtensionDependency">
+ *			<name>curl</name>
+ *			<required>true</required>
+ *		</dependency>
+ *
+ *		<!-- Dependency on the value of a PHP ini setting. -->
+ *		<dependency type="app\decibel\packaging\DPhpIniDependency">
+ *			<name>file_uploads</name>
+ *			<required>true</required>
+ *		</dependency>
+ *
+ *	</dependencies>
+ * @endcode
+ *
+ * @subsection app_manifests_dependencies_types	Dependency Types
+ *
+ * Decibel defines a range of dependency types that can be used in App manifests:
+ *
+ * - {@link app::decibel::packaging::DPhpDependency DPhpDependency}
+ *	 to require or recommend a particular version of PHP.
+ * - {@link app::decibel::packaging::DPhpExtensionDependency DPhpExtensionDependency}
+ *	 to require or recommend the installation of a PHP extension.
+ * - {@link app::decibel::packaging::DPhpIniDependency DPhpIniDependency}
+ *	 to require or recommend the value of a PHP ini setting.
+ * - {@link app::decibel::packaging::DMySQLDependency DMySQLDependency}
+ *	 to require or recommend a particular version of MySQL.
+ * - {@link app::decibel::packaging::DAppDependency DAppDependency}
+ *	 to require a particular version of a %Decibel App (or the framework
+ *	 itself) to be installed.
+ *
+* @section app_manifests_changelog	Changelog
+ *
+ * The <code>\<changelog\></code> section provides information about changes,
+ * bug fixes and new features made available in each version of the App.
+ *
+ * @code
+ *  <changelog>
+ *      <release version="1.1.0">
+ *          <change bugid="xxxx">Fixed a bug</change>
+ *          <change>Changed something</change>
+ *      </release>
+ *  </changelog>
+ * @endcode
+ *
+ * A new <code>\<release\></code> section should be added to the changelog
+ * each time a new version is released.
+ *
+ * @section app_manifests_inheritance	Inheritance
+ *
+ * App manifests will inherit dependencies from the manifest of any parent
+ * class, for example if <code>AppB</code> extends <code>AppA</code>, it
+ * will be dependent on the dependencies defined in the manifest of
+ * <code>AppA</code> and <code>AppB</code>
+ *
+ * Additionally, an App automatically inherits the dependencies of any other
+ * %Decibel Apps that it is dependent upon through
+ * a {@link app::decibel::packaging::DAppDependency DAppDependency}
+ * dependency in it's manifest.
+ *
+ * @section app_manifests_samplestructure	Sample Structure
+ *
+ * The following diagram shows the location of the App Manifest
+ * (<code>MyApp.manifest.xml</code>) within a sample file structure
+ * for an App called "MyApp".
+ *
+ * @code
+ * \wwwroot
+ *    \- app
+ *         \- MyApp
+ *              |- MyApp.php
+ *              \- MyApp.manifest.xml
+ * @endcode
+ */
+
+/**
+ * @page app_registrations App Registrations
+ *
+ * The optional App Registrations file allows an App to register information
+ * including stored procedures, event handlers and administration menu items.
+ *
+ * An App Registration file must be named <code>[App Name].info.php</code>
+ * and reside in the App's top-level directory.
+ * See @ref app_registrations_samplestructure for an example.
+ *
+ * @section app_registrations_storedprocedures Stored Procedures
+ *
+ * Stored Procedures are pre-defined SQL statements that can be used
+ * to retrieve information from, or modify information within the database.
+ *
+ * @note
+ * %Decibel stored procedures do not utilise native MySQL stored procedure
+ * functionality.
+ *
+ * Stored procedures provide benefits including:
+ * - Increased security by ensuring query parameters are used. This reduces
+ *   the chance of SQL injection as parameter values are automatically escaped.
+ * - Increased performance through consistent query re-use ensuring effective
+ *   re-use of the database cache and optimiser.
+ * - Simplification of maintenance by storing queries in one place even though
+ *   they may be used multiple times.
+ *
+ * @warning
+ * Due to the hierarchical and highly normalised structure of the %Decibel
+ * database, a high level of understanding is recommended before attempting
+ * to access or manipulate data directly within the database.
+ * See the @ref model_orm Developer Guide for information about using
+ * %Decibel's inbuilt ORM functionality before reverting to direct
+ * database queries.
+ *
+ * Stored Procedures must first be registered using the
+ * {@link app::decibel::database::DStoredProcedure::register() DStoredProcedure::register()}
+ * method, called within an App Registrations file. Once registered, a stored
+ * procedure may be used at any point during application execution
+ * by passing it's registered  name as the first parameter of the
+ * {@link app::decibel::database::DQuery DQuery} constructor.
+ *
+ * @subsection app_registrations_storedprocedures_naming Naming
+ *
+ * It is recommended that stored procedures names are based on the namespace
+ * of the class that utilises them to allow easy identification, for example
+ * <code>[Namespace]-[Procedure Name]</code>, or
+ * <code>app\\MyApp\\News\\Article-getLatestArticle</code>
+ *
+ * @subsection app_registrations_storedprocedures_parameters Query Parameters
+ *
+ * Data should always be passed to queries as parameters. This will ensure that
+ * data is always escaped and encoded correctly, and will reduce the risk of SQL
+ * injection attacks. A query parameter is include by enclosing the parameter
+ * name in hash characters (<code>#</code>), for example:
+ *
+ * @code
+ * use app\decibel\database\DStoredProcedure;
+ *
+ * DStoredProcedure::register(
+ *		'app\\MyApp\\MyApp-deleteData',
+ *		"DELETE FROM `myapp_table1` WHERE `id`=#id#;
+ *		 DELETE FROM `myapp_table2` WHERE `id`=#id#"
+ * );
+ * @endcode
+ *
+ * These placeholders will be substituted with the respective value provided
+ * to the second parameter of the {@link app::decibel::database::DQuery DQuery}
+ * constructor.
+ *
+ * See @ref database_querying_parameters for further information.
+ *
+ * @subsection app_registrations_storedprocedures_multiple Multiple Statements
+ *
+ * Stored procedures can include multiple SQL statements, defined as an array
+ * of individual statements, for example:
+ *
+ * @code
+ * use app\decibel\database\DStoredProcedure;
+ *
+ * DStoredProcedure::register(
+ * 		'app\\MyApp\\MyApp-deleteData',
+ * 		array(
+ * 			"DELETE FROM `myapp_table1` WHERE `id`=1",
+ * 			"DELETE FROM `myapp_table2` WHERE `id`=1",
+ * 		);
+ * );
+ * @endcode
+ *
+ * @warning
+ * Decibel will not recognise a semi-colon (<code>;</code>) as a separtor of multiple
+ * SQL statements. Such statements will fail execution.
+ *
+ * @subsection app_registrations_storedprocedures_utilisation Using Stored Procedures
+ *
+ * See @ref database_querying in the @ref database Developer Guide
+ * for information about how to use a stored procedure.
+ *
+ * @section app_registrations_eventhandlers	Event Handlers
+ *
+ * The App Registrations file can be used to make permanent subscriptions
+ * to one or more event dispatchers.
+ *
+ * See the @ref events Developer Guide for further information.
+ *
+ * @subsection app_registrations_eventhandlers_example Example
+ *
+ * The following example binds the <code>app\\MyApp\\MyApp::onDatabaseOptimise()</code>
+ * function to the <code>app\\decibel\\database\\maintenance\\DOptimiseDatabase</code> scheduled event.
+ *
+ * @code
+ * use app\decibel\database\maintenance\DOptimiseDatabase;
+ *
+ * DOptimiseDatabase::subscribeObserver(
+ * 	array('app\\MyApp\\MyApp', 'onDatabaseOptimise')
+ * );
+ * @endcode
+ *
+ * @section app_registrations_privileges Privileges
+ *
+ * Privileges are used to control access to functionality within %Decibel.
+ *
+ * The App Registrations file can be used to register custom privileges
+ * for use in controlling access to front-end or back-end functionality provided
+ * by an App.
+ *
+ * @note
+ * %Decibel automatically registers some privileges for models, so it is not
+ * usually necessary to add privilege registrations for custom models
+ * to your App Registrations file. See @ref models_privilges in the @ref models
+ * Developer Guide for further information.
+ *
+ * See @ref accesscontrol_privileges in the @ref accesscontrol Developer Guide
+ * for further details.
+ *
+ * @subsection app_registrations_privileges_example Example
+ *
+ * The following example creates a custom privilege called
+ * <code>app\\MyApp\\Reporting-CustomReport</code> which can be used to control
+ * access to the "Custom Report".
+ *
+ * @code
+ * use app\decibel\authorise\DPrivilege;
+ *
+ * DPrivilege::registerPrivilege(
+ * 	'app\\MyApp\\Reporting-CustomReport',
+ * 	'Reporting',
+ * 	'Allows a user to view the Custom Report.'
+ * );
+ * @endcode
+ *
+ * @section app_registrations_languages Languages
+ *
+ * Languages can be defined in the App Registrations file where it is necessary
+ * for a particular language to be available in order for the App to function
+ * correctly.
+ *
+ * @subsection app_registrations_languages_example Example
+ *
+ * The following example registers the Spanish language, localised for Colombia.
+ *
+ * @code
+ * use app\decibel\regional\DLanguage;
+ *
+ * DLanguage::registerLanguage(
+ * 	'es-co',				// W3C standard language code.
+ * 	'Spanish (Colombia)',	// Name for the language within Decibel.
+ * 	'Español',				// Local name for the language.
+ * 	'co'					// Country code for the flag icon to use.
+ * );
+ * @endcode
+ *
+ * See @ref multilingual_setup_define_cms_advanced for a detailed explanation
+ * of each of the available parmaeters.
+ *
+ * @section app_registrations_samplestructure	Sample Structure
+ *
+ * The following diagram shows the location of the App Registration file
+ * (<code>MyApp.info.php</code>) within a sample file structure
+ * for an App called "MyApp".
+ *
+ * @code
+ * \wwwroot
+ *    \- app
+ *         \- MyApp
+ *              |- MyApp.php
+ *              |- MyApp.info.php
+ *              \- MyApp.manifest.xml
+ * @endcode
+ */
+
+/**
+ * @page app_configurations App Configurations
+ *
+ * Coming soon. If you need assistance with this topic immediately, please
+ * ask a question at http://portal.decibeltechnology.com
+ */
+
+/**
+ * @page app_translations Translations
+ *
+ * Coming soon. If you need assistance with this topic immediately, please
+ * ask a question at http://portal.decibeltechnology.com
+ */
+
+/**
+ * @page app_thirdpartycomponents Third-party Components
+ *
+ * All third-party components utilised by an App must be kept within
+ * the <code>_3rdparty</code> directory within an App's top-level directory.
+ *
+ * @warning
+ * This requirement is due to %Decibel's strict namespacing and file naming requirements
+ * (all class files must be located in a directory that matches their namespace).
+ * A {@link app::decibel::registry::DIncorrectClassNameException DIncorrectClassNameException}
+ * or {@link app::decibel::registry::DIncorrectNamespaceException DIncorrectNamespaceException}
+ * will be thrown if any class outside of the <code>_3rdparty</code> folder does not meet this
+ * requirement. This exception cannot be caught and will halt application execution.
+ *
+ * @section app_thirdpartycomponents_samplestructure Sample Structure
+ *
+ * The following diagram shows a sample file structure for an App called "MyApp",
+ * which contains a third-party component.
+ *
+ * @code
+ * \wwwroot
+ *    \- app
+ *         \- MyApp
+ *              |- _3rdparty
+ *              |     \- HelpfulComponent
+ *              |          |- Helpful.php
+ *              |          |- bootstrap.php
+ *              |          \- resources
+ *              |               |- helpful.gif
+ *              |               \- helpful.css
+ *              |- MyApp.php
+ *              \- MyApp.manifest.xml
+ * @endcode
+ */
+
+/**
+ * @page app_tables	Database Tables
+ *
+ * The optional App Database Tables file allows an App to register custom
+ * tables within the database.
+ *
+ * In most cases, a developer should not need to create custom tables within
+ * the database, as %Decibel provides full ORM functionality.
+ * See the @ref model_orm Developer Guide for information about manipulating
+ * and querying model information.
+ *
+ * An App's Database Tables file must be named <code>[App Name].tables.xml</code>
+ * and reside in the App's top-level directory.
+ * See @ref app_tables_samplestructure for an example.
+ *
+ * @note
+ * You do not need to create a table definition for %Decibel models.
+ *
+ * @section app_tables_xmlformat XML Format
+ *
+ * The Database Tables file is an XML file with the following format:
+ *
+ * @code
+ * <?xml version="1.0" encoding="utf-8"?>
+ * <tables>
+ * 	<table name="...">
+ *		<field ... />
+ *		...
+ *		<index ... />
+ *		...
+ *	</table>
+ *	...
+ * </tables>
+ * @endcode
+ *
+ * The <code>\<tables\></code> section can contain multiple
+ * <code>\<table\></code> elements, each representing a custom table
+ * in the database.
+ *
+ * @subsection app_tables_xmlformat_table	<table> Element
+ *
+ * Each <code>\<table\></code> element has a single attribute,
+ * <code>name</code>, which must contain the database table name.
+ *
+ * The <code>\<table\></code> element can contain multiple
+ * <code>\<field\></code> and <code>\<index\></code> elements.
+ *
+ * @subsection app_tables_xmlformat_field	<field> Element
+ *
+ * A <code>\<field\></code> element has the following attributes:
+ * - <code>name</code>: The name of the field in the database table. Required.
+ * - <code>type</code>: The field's data type. See http://dev.mysql.com/doc/refman/5.6/en/data-type-overview.html
+ *		for a list of available types. Required.
+ * - <code>null</code>: Whether the field can contain null values (<code>true</code>
+ *		or <code>false</code>). Optional.
+ * - <code>size</code>: The size of the field. Optional for textual and numeric fields.
+ * - <code>unsigned</code>: Whether the field is un-signed (<code>true</code>
+ *		or <code>false</code>). Optional for numeric fields.
+ * - <code>autoincrement</code>: Whether the field value increments automatically
+ *		(<code>true</code> or <code>false</code>). Optional for numeric fields.
+ *
+ * @subsection app_tables_xmlformat_index	<index> Element
+ *
+ * An <code>\<index\></code> element has the following attributes:
+ * - <code>type</code>: The type of the index ("PRIMARY", "INDEX" or "UNIQUE").
+ *		Required.
+ * - <code>name</code>: The name of the index. Required.
+ * - <code>fields</code>: Comma separated list of fields to be included
+ *		in the index. Required.
+ *
+ * @section app_tables_example	Example
+ *
+ * The following XML will cause %Decibel to create two custom tables in the
+ * application database, "myapp_table1" and "myapp_table2":
+ *
+ * @code
+ * <?xml version="1.0" encoding="utf-8"?>
+ * <tables>
+ * 	<table name="myapp_table1">
+ * 		<field name="id" type="bigint" unsigned="true" autoincrement="true" />
+ * 		<field name="name" type="varchar" null="true" size="100" />
+ * 		<index type="PRIMARY" name="PRIMARY" fields="id" />
+ * 		<index type="UNIQUE" name="unique_name" fields="name" />
+ * 		<index type="INDEX" name="index_name" fields="name,id" />
+ * 	</table>
+ * 	<table name="myapp_table2">
+ * 	 	<field name="id" type="bigint" unsigned="true" />
+ * 		<field name="value" type="blob" null="true" />
+ * 		<index type="PRIMARY" name="PRIMARY" fields="id" />
+ * 	</table>
+ * </tables>
+ * @endcode
+ *
+ * @section app_tables_samplestructure	Sample Structure
+ *
+ * The following diagram shows the location of the App Database Tables file
+ * (<code>MyApp.tables.xml</code>) within a sample file structure
+ * for an App called "MyApp".
+ *
+ * @code
+ * \wwwroot
+ *    \- app
+ *         \- MyApp
+ *              |- MyApp.php
+ *              |- MyApp.manifest.xml
+ *              \- MyApp.tables.xml
+ * @endcode
+ */
+
+/**
+ * @page app_tests	Test Cases
+ *
+ * Coming soon. If you need assistance with this topic immediately, please
+ * ask a question at http://portal.decibeltechnology.com
+ */

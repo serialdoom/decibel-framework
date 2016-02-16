@@ -1,0 +1,440 @@
+<?php
+
+/**
+ * @defgroup debugging Debugging
+ *
+ * Classes for reporting on and debugging issues during application execution.
+ */
+
+/**
+ * @defgroup debugging_standard Standard Exceptions
+ * @ingroup debugging
+ *
+ * Generic exceptions that may be thrown from custom App code.
+ */
+
+/**
+ * @defgroup debugging_special Special Exceptions
+ * @ingroup debugging
+ *
+ * Exceptions for use in specific situations.
+ */
+
+/**
+ * @page debugging Debugging and Error Handling
+ *
+ * - @subpage debugging_debug
+ * - @subpage debugging_errors
+ * - @subpage debugging_exceptions
+ * - @subpage debugging_errorlog
+ * - @subpage debugging_console
+ *
+ * @section debugging_troubleshooting Locating Error Messages
+ *
+ * Where possible, %Decibel will attempt to handle errors and exceptions
+ * that occur during application execution. If troubleshooting an issue where
+ * no obvious error information is available, the following locations should
+ * be checked:
+ *
+ * - The @ref debugging_console
+ * - The @ref debugging_errorlog
+ * - The <code>error_log</code> file in the application root directory
+ * - The web server error log (See http://httpd.apache.org/docs/2.2/logs.html#errorlog)
+ */
+
+/**
+ * @page debugging_debug Debug Statement
+ *
+ * The debug statement is a global function, <code>debug()</code>, available
+ * for use anywhere within %Decibel code. This statement allows a developer
+ * to interrogate the value of any variable without interrupting the execution
+ * flow or output of the code.
+ *
+ * Simply pass the variable to be debugged as the first parameter
+ * of the <code>debug</code> function:
+ *
+ * @code
+ * $a = 'test';
+ * debug($test);
+ * @endcode
+ *
+ * The variable contents, as well as the file and line number from which
+ * the debug statement was called will be shown in the @ref debugging_console.
+ *
+ * It is also possible to include a backtrace, showing the execution path
+ * to the point of debugging, by passing <code>true</code> as the second
+ * parameter:
+ *
+ * @code
+ * $a = 'test';
+ * debug($test, true);
+ * @endcode
+ */
+
+/**
+ * @page debugging_errors	Error Handling
+ *
+ * Where possible, %Decibel captures PHP errors and converts them
+ * to appropriate @ref debugging_exceptions. However, in some cases this is not
+ * possible and the error will be handled by %Decibel's error handler
+ * and reported in the @ref debugging_errorlog and @ref debugging_console
+ * (when not in @ref configuration_mode_production).
+ *
+ * @note
+ * %Decibel reports all PHP errors, including <code>E_STRICT</code>
+ * and <code>E_DEPRECATED</code>, as developers should attempt to produce
+ * code that is as error-free as possible.
+ *
+ * While it is not recommended for production code, it is at times convenient
+ * to trigger a simple error for debugging purposes while writing code.
+ * This can be achieved using PHP's <code>trigger_error</code> function:
+ *
+ * @code
+ * trigger_error('An error happened!');
+ * @endcode
+ *
+ * These user errors will also be handled by %Decibel's error handler
+ * and reported in the @ref debugging_errorlog and @ref debugging_console,
+ * dependent on the current @ref configuration_mode.
+ *
+ * See http://php.net/trigger_error for further information about user errors.
+ */
+
+/**
+ * @page debugging_exceptions	Exceptions
+ *
+ * %Decibel uses PHP exceptions to report any issues encountered during
+ * the execution of core or App code.
+ *
+ * This mechanism is preferred over PHP errors as it allows the developer
+ * to catch and manage errors as they occur, with the potential of providing
+ * a "fail-over" state to the end user rather than abruptly interrupting their
+ * journey. With this, however, comes the additional requirement to ensure
+ * that potential exceptions are handled in custom App code.
+ *
+ * @note
+ * %Decibel treats core exceptions differently depending
+ * on the @ref configuration_mode. In Debug mode, most exceptions will halt
+ * application execution, allowing the developer to troubleshoot and correct
+ * the error. In Test and Production modes, exceptions are managed internally
+ * where possible and recorded in the @ref debugging_errorlog for further
+ * analysis by the developer. It is important to continually check the error log
+ * on a production website as the presence of exceptions may indicate that
+ * a custom process is not working correctly.
+ *
+ * All %Decibel exceptions extend the DException base class, which in turn
+ * extends the PHP Exception class. See http://php.net/exceptions for more
+ * information about PHP exceptions.
+ *
+ * @section debugging_exceptions_handling	Handling Exceptions
+ *
+ * %Decibel's API documentation highlights exceptions that could potentially
+ * be thrown (if any) from each core function. Where possible, %Decibel will
+ * attempt to continue application execution following an exceptions, however
+ * it is the responsibility of the developer to catch and handle these
+ * exceptions to ensure the user journey is not interrupted.
+ *
+ * Exceptions should be caught using PHP's <code>try...catch</code> block,
+ * for example:
+ *
+ * @code
+ * function throwException() {
+ * 	throw new app\decibel\debug\DReadOnlyParameterException('age');
+ * }
+ *
+ * try {
+ * 	throwException();
+ * } catch (app\decibel\debug\DReadOnlyParameterException $e) {
+ * 	// Handle exception.
+ * }
+ * @endcode
+ *
+ * If caught, it is assumed that the exception will be managed and application
+ * execution will continue as normal, therefore no error message will be shown
+ * in %Decibel's @ref debugging_errorlog. If you are unable to handle the
+ * exception, it should be thrown to a higher level in the code, for example:
+ *
+ * @code
+ * function throwException() {
+ * 	throw new app\decibel\debug\DReadOnlyParameterException('age');
+ * }
+ *
+ * try {
+ * 	throwException();
+ * } catch (app\decibel\debug\DReadOnlyParameterException $e) {
+ * 	if ($canHandleException) {
+ * 		// Handle exception.
+ * 	} else {
+ *		throw $e;
+ * 	}
+ * }
+ * @endcode
+ *
+ * @warning
+ * If the exception is not caught and handled, this could result in application
+ * execution being halted, which means a blank screen may be shown to the user.
+ *
+ * @section debugging_exceptions_deprecated Deprecation Exceptions
+ *
+ * DDeprecatedException is a special type of exception that will be thrown
+ * whenever a deprecated feature of %Decibel is used. These exceptions will only
+ * ever affect execution of the application in Debug mode. In Test and Production
+ * mode they will be added to the @ref debugging_errorlog without notifying
+ * the user.
+ *
+ * These exceptions will identify the deprecated feature and provide
+ * an alternative. It is important to keep application code up to date
+ * by enacting advice from the exceptions as soon as possible, to ensure
+ * your App runs as efficiently as possible.
+ *
+ * @section debugging_exceptions_throwing	Throwing Exceptions
+ *
+ * There are two ways to throw a %Decibel exception:
+ *
+ * @subsection debugging_exceptions_throwing_throw Throw Statement
+ *
+ * The <code>throw</code> statement is the native PHP mechanism for throwing
+ * an exception. This method should be used where you wish for the exception
+ * to "bubble up", allowing an error to be managed in a calling function,
+ * for example:
+ *
+ * @code
+ * function throwException() {
+ * 	throw new app\decibel\debug\DReadOnlyParameterException('age');
+ * }
+ *
+ * try {
+ * 	throwException();
+ * } catch (app\decibel\debug\DReadOnlyParameterException $e) {
+ * 	// Handle exception.
+ * }
+ * @endcode
+ *
+ * @note
+ * When using the <code>throw</code> statement it is very important to ensure
+ * that the exception is caught and handled wherever the throwing function
+ * is called.
+ *
+ * @subsection debugging_exceptions_throwing_errorhandler Error Handler
+ *
+ * The %Decibel error handler can be used to immediately handle an exception,
+ * adding runtime information to the @ref debugging_errorlog for later analysis
+ * and correction.
+ *
+ * @code
+ * app\decibel\error\DErrorHandler::throwException(
+ * 	new app\decibel\debug\DReadOnlyParameterException('age');
+ * );
+ * @endcode
+ *
+ * In Debug mode, this method is the same a throwing an exception, as application
+ * execution will halt unless the exception is caught at a higher level.
+ *
+ * In Production and Test modes, the exception will be logged but application
+ * execution will continue. This method is therefore not suitable
+ * if the exception needs to be caught at a higher level.
+ *
+ * @note
+ * When using this method, it is important to ensure that the application
+ * is in a suitable state to continue running following the issue that caused
+ * the exception.
+ *
+ * @section debugging_exceptions_standard Standard Exceptions
+ *
+ * %Decibel provides a number of standard exception types that can be used
+ * by custom Apps in a variety of situations, rather than defining a custom
+ * exception type.
+ *
+ * @subsection debugging_exceptions_standard_invalidparam Invalid Parameter (DInvalidPropertyException)
+ *
+ * DInvalidPropertyException can be thrown when a request is made for
+ * a non-existent parameter value. When throwing the exception, it should
+ * be provided the name of the requested parameter, for example:
+ *
+ * @code
+ * class MyClass {
+ *
+ * 	protected $title;
+ *
+ * 	public function __get($name) {
+ * 		switch ($name) {
+ *
+ * 			case 'title':
+ * 				return $this->title;
+ *
+ * 			default:
+ * 		 		throw new app\decibel\debug\DInvalidPropertyException($name);
+ * 		}
+ * 	}
+ * }
+ *
+ * $class = new MyClass();
+ * echo $class->subject;
+ * @endcode
+ *
+ * This will halt execution with the message:
+ *
+ * <em>No parameter exists with the name <code>subject</code></em>
+ *
+ * @subsection debugging_exceptions_standard_invalidparamvalue Invalid Parameter Value (DInvalidParameterValueException)
+ *
+ * DInvalidParameterValueException can be thrown when an attempt is made
+ * to set an invalid value against an object parameter. When throwing
+ * the exception, it should be provided the name of the parameter
+ * and the expected value, for example:
+ *
+ * @code
+ * class MyClass {
+ *
+ * 	protected $title;
+ *
+ * 	public function __set($name, $value) {
+ * 		switch ($name) {
+ *
+ * 			case 'title':
+ * 				if (!is_string($title)) {
+ * 					throw new app\decibel\debug\DInvalidParameterValueException($name, 'string');
+ * 				}
+ * 				$this->title = $title;
+ *
+ * 			default:
+ * 				throw new app\decibel\debug\DInvalidPropertyException($name);
+ * 		}
+ * 	}
+ * }
+ *
+ * $class = new MyClass();
+ * $class->title = false;
+ * @endcode
+ *
+ * This will halt execution with the message:
+ *
+ * <em>Invalid value provided for parameter <code>title</code>, expected: string</em>
+ *
+ * @subsection debugging_exceptions_standard_readonlyparam Read-only Parameter Modification (DReadOnlyParameterException)
+ *
+ * DReadOnlyParameterException can be thrown when an attempt is made to change
+ * the value of a read-only object parameter. When throwing the exception,
+ * it should be provided the name of the parameter, for example:
+ *
+ * @code
+ * class MyClass {
+ *
+ * 	protected $title;
+ *
+ * 	public function __set($name, $value) {
+ * 		switch ($name) {
+ *
+ * 			case 'title':
+ * 				if (!is_string($title)) {
+ * 					throw new app\decibel\debug\DInvalidParameterValueException($name, 'string');
+ * 				}
+ * 				$this->title = $title;
+ *
+ * 			case 'age':
+ * 				throw new app\decibel\debug\DReadOnlyParameterException($name);
+ *
+ * 			default:
+ * 				throw new app\decibel\debug\DInvalidPropertyException($name);
+ * 		}
+ * 	}
+ * }
+ *
+ * $class = new MyClass();
+ * $class->age = 10;
+ * @endcode
+ *
+ * This will halt execution with the message:
+ *
+ * <em>The value of parameter <code>age</code> cannot be modified.</em>
+ *
+ * @section debugging_exceptions_custom Defining Custom Exceptions
+ *
+ * %Decibel defines a vast range of exceptions for reporting issues occurring
+ * within core functionality, however sometimes a different type of exception
+ * may be required by custom App code.
+ *
+ * To create a custom exception type, simply extend DException. You must define
+ * a single constant in the extending class, called <code>message</code>.
+ * This constant will contain the message that will be reported to the user,
+ * containing place-holders for variable data in the format used by the PHP
+ * <code>sprintf</code> function. See http://php.net/sprintf for further details about
+ * placeholder format.
+ *
+ * Following is an example of a custom exception class:
+ *
+ * @code
+ * namesapce app\MyApp;
+ *
+ * class DMyException extends app\decibel\debug\DException {
+ * 	const message = 'Could not connect to authentication server at %s, port %d';
+ * }
+ * @endcode
+ *
+ * The custom exception can then be thrown using the following code:
+ *
+ * @code
+ * throw new app\MyApp\DMyException('auth.mywebsite.com', 389);
+ * @endcode
+ *
+ * @section debugging_exceptions_json	JSON Encoded Exceptions
+ *
+ * Exceptions can be JSON encoded for use with %Decibel's Remote Procedure
+ * and AJAX functionality.
+ *
+ * Following is an example of a JSON encoded exception returned by a remote
+ * procedure call:
+ *
+ * @code
+ * {
+ * 	"qualifiedName":"app\\decibel\\rpc\\debug\\DMissingRpcParameterException"
+ * 	"message":"Required parameter mode has not been provided.",
+ * 	"file":"C:\\www\\secfinex.com\\app\\decibel\\configuration\\DSelectApplicationMode.php",
+ * 	"line":155,
+ * 	"backtrace":[
+ * 		{
+ * 			"file":"C:\\www\\secfinex.com\\app\\decibel\\rpc\\DRemoteProcedure.php(329)",
+ * 			"function":"app\\decibel\\configuration\\DSelectApplicationMode->validateParameters(app\\decibel\\http\\DRequest)"
+ * 		},
+ * 		{
+ * 			"file":"C:\\www\\secfinex.com\\app\\decibel\\router\\DRpcRouter.php(107)",
+ * 			"function":"app\\decibel\\rpc\\DRemoteProcedure->run(app\\decibel\\authorise\\DUser, app\\decibel\\http\\DRequest)"
+ * 		},
+ * 		{
+ * 			"file":"C:\\www\\secfinex.com\\app\\decibel\\router\\DRouter.php(29)",
+ * 			"function":"app\\decibel\\router\\DRpcRouter->run()"
+ * 		}
+ * 	],
+ * }
+ * @endcode
+ *
+ * See @ref rpc_writing_errors for further information.
+ */
+
+/**
+ * @page debugging_console	Debug Console
+ *
+ * The %Decibel Debug Console displays whenever an error occurs, or the developer
+ * has inserted a @ref debugging_debug within executed code.
+ *
+ * @image html debugging_console_01.jpg "Decibel Debug Console"
+ */
+
+/**
+ * @page debugging_errorlog Error Log
+ *
+ * %Decibel logs all error and exception information to the Error Log.
+ *
+ * The error log can be accessed by clicking
+ * on the <em>Reporting > Error Reports</em> menu item.
+ *
+ * @note
+ * It is important to continually check the error log on a production website
+ * as the presence of exceptions may indicate that a custom process
+ * is not working correctly. Additionally, the reporting of errors consumes
+ * additional resources and can affect the performance of a website.
+ *
+ * @image html debugging_errorlog_01.jpg "Decibel CMS Error Log"
+ *
+ * @image html debugging_errorlog_02.jpg "Decibel CMS Error Log Detail View"
+ */

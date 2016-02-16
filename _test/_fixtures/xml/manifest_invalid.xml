@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest>
+
+	<authors>
+		<author>
+			<email>hello@decibeltechnology.com</email>
+		</author>
+	</authors>
+
+	<licence>
+		<location>http://www.decibeltechnology.com/licence/</location>
+	</licence>
+
+	<dependencies>
+		<dependency type="app\decibel\packaging\DPhpDependency">
+			<required>5.3.10</required>
+		</dependency>
+	</dependencies>
+
+</manifest>

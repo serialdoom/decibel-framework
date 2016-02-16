@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * @namespace	app
+ *
+ * The parent namespace for all components within a %Decibel application.
+ */
+
+/**
+ * @namespace	app::decibel
+ *
+ * Contains core %Decibel Framework classes.
+ */
+
+/**
+ * @namespace	app::decibel::asset
+ *
+ * Contains functionality required to manipulate assets (or media) for use on the web.
+ */
+
+/**
+ * @namespace	app::decibel::authorise
+ *
+ * Contains functionality required to manage authorisation of user accounts and
+ * assignment of privileges to perform specific tasks.
+ */
+
+/**
+ * @namespace	app::decibel::cache
+ *
+ * Contains functionality required to store and retrieve information from
+ * memory and database caches.
+ */
+
+/**
+ * @namespace	app::decibel::database
+ *
+ * Contains functionality required to interact with the database.
+ */
+
+/**
+ * @namespace	app::decibel::event
+ *
+ * Contains functionality required to trigger and handle application events.
+ */
+
+/**
+ * @namespace	app::decibel::file
+ *
+ * Contains functionality required to interact with the file system.
+ */
+
+/**
+ * @namespace	app::decibel::mail
+ *
+ * Contains functionality required to compose and send email.
+ */
+
+/**
+ * @namespace	app::decibel::rpc
+ * @ingroup		rpc
+ *
+ * Contains functionality required to create Remote Procedure Calls (or Web Services).
+ *
+ * See the @ref rpc Developer Guide for further information.
+ */

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="_test/bootstrap.php"
+         printerClass="PHPUnit_TextUI_ResultPrinter"
+         testSuiteLoaderClass="PHPUnit_Runner_StandardTestSuiteLoader"
+         cacheTokens="false"
+         colors="true"
+         backupGlobals="true"
+         backupStaticAttributes="false"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         forceCoversAnnotation="false"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutChangesToGlobalState="true"
+         processIsolation="false"
+         stopOnError="false"
+         stopOnFailure="false"
+         stopOnIncomplete="false"
+         stopOnSkipped="false"
+         stopOnRisky="false"
+         timeoutForSmallTests="1"
+         timeoutForMediumTests="10"
+         timeoutForLargeTests="60"
+         verbose="true"
+>
+	<testsuites>
+		<testsuite name="Decibel Framework Suite">
+			<directory suffix="Test.php">./_test</directory>
+		</testsuite>
+	</testsuites>
+
+	<filter>
+		<whitelist processUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">./</directory>
+			<exclude>
+				<directory suffix=".php">_*</directory>
+				<directory suffix=".php">vendor</directory>
+				<file>./application/bootstrap.php</file>
+				<file>./application/cronExec.php</file>
+				<file>DecibelUninstaller.php</file>
+				<file>Decibel.config.php</file>
+				<file>Decibel.info.php</file>
+				<file>status.php</file>
+			</exclude>
+		</whitelist>
+	</filter>
+
+	<logging>
+		<log type="coverage-clover" target="./_build/coverage.xml"/>
+	</logging>
+</phpunit>

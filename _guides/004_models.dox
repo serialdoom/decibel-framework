@@ -1,0 +1,542 @@
+<?php
+
+/**
+ * @defgroup models Models
+ *
+ * This group contains all classes that are used to create and interact with models.
+ *
+ * The following Developer Guides explain how to utilise models within a %Decibel application:
+ * - @ref model
+ */
+
+/**
+ * @page model Implementing Models
+ *
+ * Models are used to store data and relevant business rules. Each model represents a single data
+ * object - generally a row in a database table. Each field of the data object is represented as an
+ * attribute of the model; the attribute has a label and can be validated against a set of rules.
+ *
+ * Models are implemented in two parts:
+ *
+ * @par Definition:
+ * Defines the fields, indexes, event handlers and other properties specific to the model.
+ * The definition of a model is an instance of DModel_Definition or one of its child classes.
+ *
+ * @par Business Logic:
+ * Defines business rules including validations of, and calculations on the data of the model.
+ * The business logic for a model is an instance of DModel or one of its child classes.
+ *
+ * @note
+ * Model definitions and business logic are implemented as two separate classes to enable efficient
+ * model caching by the {@link app::decibel::cache::DModelCache DModelCache} class.
+ *
+ * @section model_selection Selecting a Parent Model
+ *
+ * When creating a model, the first step is to select the parent class for the new model.
+ * The highest level parent class for any model is DModel. This class will provide all of the basic
+ * functionality for a model to function within %Decibel.
+ *
+ * In some cases, additional functionality is required, and it is necessary to select a lower level
+ * class to extend. There is no restriction on which class may be extended, as long as that class
+ * itself extends DModel at some point in its inheritance hierarchy. For example, you may extend
+ * Document to define a special subset of documents that may be used on a website.
+ *
+ * Any defined model can be extended, however in most cases a selection will be made from one
+ * of the following abstract model classes:
+ *
+ * - {@link app::decibel::model::DModel DModel}
+ * - {@link app::decibel::model::DLightModel DLightModel}
+ *
+ * The documentation of each class provides a description of the functionality made available
+ * and common uses for extending that class.
+ *
+ * @section	model_definition Creating the Model Definition
+ *
+ * Once you have selected the model to extend, a definition of the new model must be created.
+ * To do this, create a file within the required namespace with the filename
+ * <code>[model name]_Definition.php</code>.
+ *
+ * At a minimum, this file must contain the following code:
+ *
+ * @code
+ * namespace app\News;
+ *
+ * use app\decibel\model\DModel_Definition;
+ *
+ * class Article_Definition extends DModel_Definition {
+ *
+ *	public function __construct($qualifiedName) {
+ *
+ * 		parent::__construct($qualifiedName);
+ *
+ * 	}
+ *
+ * }
+ * @endcode
+ *
+ * In our example, this file would reside at <code>/app/News/Article_Definition.php</code>
+ *
+ * The model now needs to be defined by carrying out the following tasks:
+ *
+ * - @subpage model_options
+ * - @subpage model_fields
+ * - @subpage model_indexes
+ * - @subpage model_events
+ * - @subpage model_actions
+ *
+ * @note
+ * There is no need to create a new table within the database, as this will be
+ * managed automatically by %Decibel.
+ *
+ * @section model_logic Creating the Model Logic
+ *
+ * All business logic is encapsulated in the main model class. This is a file
+ * within the required namespace with the filename <code>[ModelName].php</code>.
+ *
+ * At a minimum, this file must contain the following code:
+ *
+ * @code
+ * namespace app\News;
+ *
+ * use app\decibel\model\DModel;
+ *
+ * class Article extends DModel {
+ *
+ *	public static function getDisplayName() {
+ *		return 'Article';
+ *	}
+ *
+ *	public static function getDisplayNamePlural() {
+ *		return 'Articles';
+ *	}
+ *
+ * }
+ * @endcode
+ *
+ * In our example, this file would reside at <code>/app/News/Article.php</code>
+ *
+ * @section model_access Accessing Administrative Functions
+ *
+ * Now that the new model is completely defined, default administrative functions
+ * (i.e the ability to create, edit and delete) can be accessed at a URL reflecting
+ * the namespace of the model, that is <code>/admin/[namespace]/[model name]/</code>
+ *
+ * In our example, we can access these function at the URL
+ * <code>/admin/News/Article/</code>.
+ *
+ * @note
+ * The default RPC URL is configurable in %Decibel, and therefore
+ * the '/remote/' component of this URL may differ on your %Decibel installation.
+ */
+
+/**
+ * @page model_options Setting Definition Options
+ */
+
+/**
+ * @page model_fields Defining Fields
+ *
+ * Each field defines a piece of information that makes up the full set of data
+ * stored by the model. For example, a News Article might have fields that
+ * represent the Heading, Content and Byline. Each of these pieces of information
+ * would be defined as an individual field within the model's definition file.
+ *
+ * A range of field types are available to facilitate the storage of various
+ * data types. These fields provide a level of automated functionality to ensure
+ * that provided values are validated, and are linked to an appropriate widget
+ * that may be used to allow modification of the field value. The default field
+ * types provided by %Decibel are:
+ *
+ * @par Numeric:
+ * - {@link app::decibel::model::field::DIntegerField DIntegerField}
+ * - {@link app::decibel::model::field::DFloatField DFloatField}
+ * - {@link app::decibel::model::field::DBooleanField DBooleanField}
+ * - {@link app::decibel::model::field::DEnumField DEnumField}
+ *
+ * @par Text:
+ * - {@link app::decibel::model::field::DTextField DTextField}
+ *
+ * @par Date and Time:
+ * - {@link app::decibel::model::field::DDateField DDateField}
+ * - {@link app::decibel::model::field::DDateTimeField DDateTimeField}
+ *
+ * @par Referential:
+ * - {@link app::decibel::model::field::DLinkedObjectField DLinkedObjectField}
+ * - {@link app::decibel::model::field::DLinkedObjectsField DLinkedObjectsField}
+ * - {@link app::decibel::model::field::DChildObjectsField DChildObjectsField}
+ *
+ * @note
+ * The DField object (or any of children listed above) may also be extended to
+ * create custom data types. This is explained in a seperate guide.
+ *
+ * Each field definition must be added to the constructor of the model's definition
+ * file. This is achieved by creating an instance of the desired field object,
+ * setting the required options, then finally adding it to the definition by
+ * calling the DModel_Definition::addField() method. An example of the
+ * aforementioned News Article is shown below:
+  *
+ * @code
+ * namespace app\News;
+ *
+ * use app\decibel\model\DModel_Definition;
+ *
+ * class Article_Definition extends DModel_Definition {
+ *
+ *	public function __construct($qualifiedName) {
+ *
+ * 		parent::__construct($qualifiedName);
+ *
+ * 		$field = new DTextField('heading', 'Heading');
+ * 		$field->maxLength = 100;
+ * 		$field->required = true;
+ * 		$this->addField($field);
+ *
+ * 		$field = new DTextField('content', 'Content');
+ * 		$field->required = true;
+ * 		$this->addField($field);
+ *
+ * 		$field = new DTextField('byline', 'Byline');
+ * 		$field->maxLength = 60;
+ * 		$this->addField($field);
+ *
+ * 	}
+ *
+ * }
+ * @endcode
+ *
+ * Each field type provides a range of options that can be used to customise
+ * the behaviour of the the field as required. The documentation of each field
+ * type should be consulted to determine the available customisations.
+ *
+ * Once a field has been defined, information will be accessible as a property
+ * of the model, for example:
+ *
+ * @code
+ * $article = Article::create();
+ * $article->heading = 'News Article';
+ * debug($article->heading);
+ * @endcode
+ */
+
+/**
+ * @page model_indexes Defining Indexes
+ *
+ * In some situations, indexes should be applied to the model to enhance search
+ * performance or enforce unique field values. Indexes defined against a model
+ * are applied directly against the database. Available index types are:
+ *
+ * @par DIndex:
+ * Creates a standard database index on one or more field. These indexes are
+ * used to enhance performance of a query or search against one or more fields
+ * of the object, where large data sets exist.
+ *
+ * @par DFulltextIndex:
+ * Creates a full-text database index on one or more fields. These indexes
+ * are used where enhanced text searching is required over a field or group
+ * of fields simultaneously.
+ *
+ * @par DUniqueIndex:
+ * Ensures that the value of the field is unique for each instance of the model.
+ * Where a DUniqueIndex is defined on one or more field, %Decibel will
+ * automatically enforce a unique constraint on these fields (through the
+ * database, where possible, and also through application logic).
+ *
+ * Each index must be added to the constructor of the model's definition file.
+ * This is achieved by creating an instance of the desired index object,
+ * adding the fields that will be included in the index, then finally adding
+ * it to the definition by calling the DModel_Definition::addIndex() method.
+ * An example of the aforementioned News Article is shown below:
+ *
+ * @code
+ * namespace app\MyApp;
+ *
+ * use app\decibel\model\DModel_Definition;
+ * use app\decibel\model\field\DTextField;
+ * use app\decibel\model\index\DFullTextIndex;
+ * use app\decibel\model\index\DUniqueIndex;
+ *
+ * class MyModel_Definition extends DModel_Definition {
+ *
+ * 	public function __construct($qualifiedName) {
+ *
+ * 		parent::__construct($qualifiedName);
+ *
+ * 		$heading = new DTextField('heading', 'Heading');
+ * 		$heading->maxLength = 100;
+ * 		$heading->required = true;
+ * 		$this->addField($heading);
+ *
+ * 		$content = new DTextField('content', 'Content');
+ * 		$content->required = true;
+ * 		$this->addField($content);
+ *
+ * 		$byline = new DTextField('byline', 'Byline');
+ * 		$byline->maxLength = 60;
+ * 		$this->addField($byline);
+ *
+ * 		$index = new DFullTextIndex('search_content', 'Content');
+ * 		$index->addField($heading);
+ * 		$index->addField($content);
+ * 		$this->addIndex($index);
+ *
+ * 		$index = new DUniqueIndex('unique_heading');
+ * 		$index->addField($heading);
+ * 		$this->addIndex($index);
+ *
+ * 	}
+ *
+ * }
+ * @endcode
+ */
+
+/**
+ * @page model_events Defining Event Handlers
+ */
+
+/**
+ * @page model_actions Defining Actions
+ */
+
+/**
+ * @page model_orm Interacting With Models
+ *
+ * - @subpage model_orm_crud
+ * - @subpage model_orm_search
+ */
+
+/**
+ * @page model_orm_crud Creating, Updating and Deleting Models
+ */
+
+/**
+ * @page model_orm_search Searching Model Data
+ *
+ * Decibel provides a suite of classes that abstract the searching of model
+ * data within the database.
+ *
+ * These classes dynamically build optimised SQL queries against the database
+ * based on the developers requirements.
+ *
+ * @section model_orm_search_initiating Initiating a Search
+ *
+ * To search models, simply call the <code>search()</code> function statically
+ * against the model class you wish to search, for example:
+ *
+ * @code
+ * use app\MyApp\Clients\Client;
+ *
+ * // Search for a Client.
+ * $search = Client::search();
+ * @endcode
+ *
+ * This will return an appropriate search object for the model, based
+ * on its inheritance hierarchy, as follows:
+ *
+ * - {@link app::decibel::model::search::DModelSearch DModelSearch} for models extending
+ *		{@link app::decibel::model::DModel DModel}
+ * - {@link app::decibel::model::search::DLightModelSearch DLightModelSearch} for models extending
+ *		{@link app::decibel::model::DLightModel DLightModel}
+ * - {@link app::decibel::auditing::DAuditSearch DAuditSearch} for models
+ *		extending {@link app::decibel::auditing::DAuditRecord DAuditRecord}
+ * - {@link app::decibel::index::DIndexSearch DIndexSearch} for models
+ *		extending {@link app::decibel::index::DIndexRecord DIndexRecord}
+ *
+ * Each of these search classes extend {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch},
+ * which provides the framework for searching all types of models within %Decibel.
+ *
+ * @section model_orm_search_example Example Models
+ *
+ * This guide uses the following models in all provided examples.
+ *
+ * @image html model_orm_search_01.png
+ *
+ * @section model_orm_search_filters Filtering Results
+ *
+ * Applying filters to a model search is the equivalent of adding
+ * <code>WHERE</code> conditions to an SQL query.
+ *
+ * Most filters can be added using the following methods:
+ *
+ * - {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::filterByField()}: Allows filtering against a field
+ *		of the model itself.
+ * - {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::filterByLinkedField()}: Allows filtering against
+ *		a field of another model linked to this model.
+ * - {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::ignore()}: Allows particular model instances
+ *		to be omitted from the results regardless of any other filters applied.
+ *
+ * The following example shows each of these methods in use:
+ *
+ * @code
+ * @endcode
+ *
+ * @subsection model_orm_search_filter_default Default Filters
+ *
+ * Certain filters are applied to model searches by default, depending on the
+ * type of model being searched.
+ *
+ * - {@link app::decibel::model::search::DModelSearch DModelSearch}
+ * - {@link app::decibel::model::search::DLightModelSearch DLightModelSearch}
+ * - {@link app::decibel::auditing::DAuditSearch DAuditSearch}
+ * - {@link app::decibel::index::DIndexSearch DIndexSearch}
+ *
+ * Remove using {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::removeDefaultFilters()}
+ *
+ * @subsection model_orm_search_filters_custom Cutom Filter Conditions
+ *
+ * Extend {@link app::decibel::model::search::DSearchCondition DSearchCondition}
+ * and call {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::addCondition()}
+ *
+ * @section model_orm_search_sorting Sorting Results
+ *
+ * {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::sortBy()}
+ *
+ * @subsection model_orm_search_sorting_custom Cutom Sort Criteria
+ *
+ * Extend {@link app::decibel::model::search::DSortCriteria DSortCriteria}
+ * and call {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::sortBy()}
+ *
+ * @section model_orm_search_grouping Grouping Results
+ *
+ * {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::groupBy()}
+ *
+ * @subsection model_orm_search_grouping_custom Cutom Grouping
+ *
+ * Extend {@link app::decibel::model::search::DGroupCriteria DGroupCriteria}
+ * and call {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::groupBy()}
+ *
+ * @section model_orm_search_retrieving Retrieving Results
+ *
+ * @subsection model_orm_search_retrieving_count Checking Result Availability and Count
+ *
+ * If you only need to check whether the serach would return results, or how
+ * many results the search returned, use the {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::hasResults()}
+ * or {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::getCount()} methods, for example:
+ *
+ * @code
+ * use app\MyApp\Clients\Client;
+ *
+ * // Are there any clients?
+ * $clientsAvailable = Client::search()
+ * 		->hasResults();
+ *
+ * // How many clients are there?
+ * $clientCount = Client::search()
+ * 		->getCount();
+ *
+ * // Is there a client with the name 'ACME'?
+ * $clientCount = Client::search()
+ * 		->filterByField('name', 'ACME')
+ * 		->hasResults();
+ * @endcode
+ *
+ * @subsection model_orm_search_retrieving_pagination Pagination
+ *
+ * {@link app::decibel::utility::DPagination DPagination}
+ *
+ * @subsection model_orm_search_retrieving_limit Limiting Results
+ *
+ * {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::limitTo()}
+ *
+ * @subsection model_orm_search_retrieving_models Retrieving Model Instances
+ *
+ * {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::getObjects()}
+ * {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::getObject()}
+ * [use as an iterator]
+ *
+ * @subsection model_orm_search_retrieving_ids Retrieving Model IDs
+ *
+ * {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::getIds()}
+ * {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::getId()}
+ *
+ * @subsection model_orm_search_retrieving_fields Retrieving Field Values
+ *
+ * @subsubsection model_orm_search_retrieving_fields_returntype Return Types
+ *
+ * Field values for model searches can be returned in one of the following ways:
+ *
+ * - <strong>Serialized</strong> ({@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::RETURN_SERIALIZED}):
+ *		This returns the field value in the way it would be saved in the database.
+ *		For example, the value returned for a
+ *		{@link app::decibel::model::field::DLinkedObjectField DLinkedObjectField}
+ *		would be the integer ID of the linked model.
+ * - <strong>Unserialized</strong> ({@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::RETURN_UNSERIALIZED}):
+ *		Returns the field value as a PHP object (where appropriate).
+ *		For example, the value returned for a
+ *		{@link app::decibel::model::field::DLinkedObjectField DLinkedObjectField}
+ *		would be an instance of the linked model.
+ * - <strong>String Values</strong> ({@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::RETURN_STRING_VALUES}):
+ *		Returns the string equivalent of the field. For a
+ *		{@link app::decibel::model::field::DLinkedObjectField DLinkedObjectField}
+ *		this would be the value returned by the implementation of the
+ *		{@link app::decibel::model::DBaseModel::getStringValue() DBaseModel::getStringValue()}
+ *		method for that model instance.
+ *
+ * These return type constants can be passed to the {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::includeField()},
+ * {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::getField()} or {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::getFields()}
+ * methods to control the output from the search.
+ *
+ * @note
+ * If no return type is provided to any of the above methods, results will
+ * be returned in serialized form ({@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::RETURN_SERIALIZED}).
+ *
+ * @subsubsection model_orm_search_retrieving_fields_single Retrieving a Single Field
+ *
+ * If the value of a single field is required, the {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::getField()}
+ * method can be used to retrieve results. The return type of field values can
+ * be controlled through the return type constants listed above, and results
+ * can be paginated if required.
+ *
+ * Returned results will be an array containing model IDs as keys mapped
+ * to field values, or a {@link app::decibel::utility::DPagination DPagination}
+ * object if pagination options are provided.
+ *
+ * @code
+ * use app\decibel\model\search\DBaseModelSearch;
+ * use app\MyApp\Clients\Client;
+ *
+ * // Retrieve a list of client names.
+ * $clientNames = Client::search()
+ * 		->getField('name');
+ *
+ * // Retrieve a list of account manager IDs
+ * // currently assigned to inactive clients.
+ * $accountManagerIDs = Client::search()
+ * 		->filterByField('active', false)
+ * 		->getField('accountManager');
+ *
+ * // Retrieve a paginated list of account manager names
+ * // currently assigned to inactive clients.
+ * $accountManagerNames = Client::search()
+ * 		->filterByField('active', false)
+ * 		->getField(
+ * 			'accountManager',
+ * 			DBaseModelSearch::RETURN_STRING_VALUES,
+ * 			1,
+ * 			10
+ * 		);
+ * @endcode
+ *
+ * @subsubsection model_orm_search_retrieving_fields_multiple Retrieving Multiple Fields
+ *
+ * {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::includeField()}
+ * {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::includeFields()}
+ * {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::getFields()}
+ *
+ * @subsubsection model_orm_search_retrieving_fields_multiple Retrieving Aggregated Field Data
+ *
+ * {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::includeAggregateField()}
+ *
+ * @section model_orm_search_export Exporting Results
+ *
+ * {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::export()}
+ *
+ * @subsection model_orm_search_caching Caching
+ *
+ * By default, the results of searches performed by the
+ * {@link app::decibel::model::search::DModelSearch DModelSearch} and
+ * {@link app::decibel::model::search::DLightModelSearch DLightModelSearch} classes will be cached.
+ *
+ * @subsection model_orm_search_debugging Debugging
+ *
+ * {@link app::decibel::model::search::DBaseModelSearch DBaseModelSearch::debug()}
+ */

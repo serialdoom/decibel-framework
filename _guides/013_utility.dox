@@ -1,0 +1,405 @@
+<?php
+
+/**
+ * @page utility Utility Classes
+ *
+ * - @subpage utility_request
+ * - @subpage utility_response
+ * - @subpage utility_session
+ * - @subpage utility_server
+ */
+
+/**
+ * @page utility_request Request
+ *
+ * The {@link app::decibel::http::request::DRequest DRequest} class is responsible for managing information provided
+ * to Decibel by a client request. It also sanitises input parameters to detect
+ * and protect against cross site scripting attacks.
+ *
+ * This singleton class can be loaded as follows:
+ *
+ * @code
+ * use app\decibel\http\request\DRequest;
+ *
+ * $request = DRequest::load();
+ * @endcode
+ *
+ * @note
+ * The {@link app::decibel::http::request::DRequest DRequest} class wraps PHP's request management functionality
+ * to provide an additional level of security and error handling. This class
+ * should be used instead of low-level functionality including
+ * the <code>$_REQUEST</code>, <code>$_GET</code>, <code>$_POST</code>
+ * and <code>$_FILES</code> super-globals.
+ *
+ * @warning
+ * The <code>$_FILES</code> super-global will be emptied by Decibel
+ * and therefore cannot be used. Use the methods defined by the {@link app::decibel::http::request::DRequest DRequest}
+ * class to access uploaded files.
+ *
+ * @section utility_request_data Request Parameters
+ *
+ * Request parameters can be accessed using one of the following methods.
+ *
+ * @subsection utility_request_data_method DRequest Methods
+ *
+ * The {@link app::decibel::http::request::DRequest DRequest::get()} method can be used to retrieve parameters from
+ * the request, for example:
+ *
+ * @code
+ * use app\decibel\http\request\DRequest;
+ *
+ * // Load the request object.
+ * $request = DRequest::load();
+ * $parameters = $request->getParameters();
+ *
+ * // Retrieve some data from the request.
+ * debug($parameters->get('myData'));
+ * @endcode
+ *
+ * The <code>$type</code> parameter can be used to specify whether
+ * GET or POST parameters should be searched, for example:
+ *
+ * @code
+ * use app\decibel\http\request\DRequest;
+ *
+ * // Load the request object.
+ * $request = DRequest::load();
+ * $parameters = $request->getParameters();
+ *
+ * // Retrieve some data from the POST parameters only.
+ * debug($parameters->get('myData'));
+ * @endcode
+ *
+ * @subsection utility_request_data_array Array Access
+ *
+ * The {@link app::decibel::http::request::DRequest DRequest} class implements PHP's <code>ArrayAccess</code> interface,
+ * allowing access to request parameters using array syntax, for example:
+ *
+ * @code
+ * use app\decibel\http\request\DRequest;
+ *
+ * // Load the request object.
+ * $request = DRequest::load();
+ *
+ * // Load request parameters.
+ * $parameters = $request->getParameters();
+ *
+ * // Retrieve some data from the request.
+ * if (isset($parameters['myData'])) {
+ * 	debug($parameters['myData']);
+ * }
+ *
+ * // Check the number of request parameters
+ * debug(count($parameters));
+ * @endcode
+ *
+ * @warning
+ * Attempting to manipulate request data using array syntax will result in a
+ * {@link app::decibel::debug::DReadOnlyParameterException DReadOnlyParameterException}
+ * exception being thrown.
+ *
+ * @subsection utility_request_data_persisting Persisting Request Data
+ *
+ * The {@link app::decibel::http::request::DRequestParameters DRequestParameters::persist()} and
+ * {@link app::decibel::http::request::DRequestParameters DRequestParameters::unpersist()} methods can
+ * be used to retrieve data from the request and persist it across requests using the session.
+ *
+ * This can be useful when performing faceted search or other searches where user input needs
+ * to be carried between requests unless modified by the user.
+ *
+ * The following example will retrieve the value for 'keyword' from the request if provided
+ * by the user, or from the session it it has previously been provided by the user on a former
+ * request, and finally setting it to a default value if neither of the previous two conditions
+ * are true:
+ *
+ * @code
+ * use app\decibel\http\request\DRequest;
+ *
+ * // Load the request object.
+ * $request = DRequest::load();
+ *
+ * // Persist the search keyword.
+ * $requestParameters = $request->getRequestParameters();
+ * $searchKeyword = $requestParameters->persist('keyword', '%');
+ * @endcode
+ *
+ * The previous code is the equivalent of:
+ *
+ * @code
+ * if (isset($_SESSION['keyword'])) {
+ *	$searchKeyword = $_SESSION['keyword'];
+ * } else if (isset($_REQUEST['keyword'])) {
+ *	$searchKeyword = $_SESSION['keyword'] = $_REQUEST['keyword'];
+ * } else {
+ *  $searchKeyword = '%';
+ * }
+ * @endcode
+ *
+ * @section utility_request_fileuploads File Uploads
+ *
+ * The {@link app::decibel::http::request::DRequest DRequest::getUploadedFile()} methods can be used to access
+ * information about files uploaded by a POST request. This method returns
+ * a {@link DFileUpload} object, for example:
+ *
+ * @code
+ * use app\decibel\http\request\DRequest;
+ * use app\decibel\http\request\DFileUpload;
+ *
+ * // Load the request object.
+ * $request = DRequest::load();
+ *
+ * // Retrieve the uploaded file.
+ * $uploads = $request->getUploadedFiles();
+ * $upload = $uploads['myFile'];
+ * if ($upload->uploadSuccessful()) {
+ * 	$upload->copyTo($newLocation);
+ * }
+ * @endcode
+ *
+ * @section utility_request_information Request Information
+ *
+ * The {@link app::decibel::http::request::DRequest DRequest} class also provides access to a range of information
+ * about the request made by the client.
+ *
+ * @subsection utility_request_information_general Requested URL
+ *
+ * The following methods can be used to determine information
+ * about the requested URL. Each of the examples below assume the requested
+ * URL was 'https://www.mydomain.com/locations/london/?postcode=EC2A%203NY'
+ *
+ * - {@link app::decibel::http::request::DRequest DRequest::getMethod()} - The HTTP method used to request the URL, for example 'GET'
+ * - {@link app::decibel::http::request::DRequest DRequest::getUrl()} - The requested URL.
+ * - {@link app::decibel::http::request::DRequest DRequest::getReferer()} - The request referer, if available.
+ *
+ * @subsection utility_request_information_type Request Type
+ *
+ * The following methods can be used to determine the type of request:
+ *
+ * - {@link app::decibel::http::request::DRequest DRequest::isPosted()} - Whether the request was made via HTTP POST.
+ * - {@link app::decibel::http::request::DRequest DRequest::isHttps()} - Whether the request was made over HTTPS.
+ * - {@link app::decibel::http::request::DRequest DRequest::isCli()} - Whether the request was initiated on the command line.
+ *
+ * @subsection utility_request_information_headers Request Headers
+ *
+ * HTTP headers sent by the client can be accessed using
+ * the {@link app::decibel::http::request::DRequest DRequest::getHeader()} and {@link app::decibel::http::request::DRequest DRequest::getAllHeaders()}
+ * methods, for example:
+ *
+ * @code
+ * use app\decibel\http\request\DRequest;
+ *
+ * // Load the request object.
+ * $request = DRequest::load();
+ *
+ * // Retrieve a specific HTTP header.
+ * $headers = $request->getHeaders();
+ * debug($headers->getHeader('User-Agent'));
+ * @endcode
+ *
+ * @subsection utility_request_information_body Request Body
+ *
+ * The body of the request can be read using the {@link app::decibel::http::request::DRequest DRequest::getBody()}
+ * method.
+ *
+ * @subsection utility_request_information_ip Client IP Address
+ *
+ * The client's IP address can be retrieved using the {@link app::decibel::http::request::DRequest DRequest::getIpAddress()}
+ * method. Additionally, the IP address can be checked against the IP Address
+ * Manager using the {@link app::decibel::security::DIpAddress DIpAddress::checkIpAddress()} method, for example:
+ *
+ * @code
+ * use app\decibel\http\request\DRequest;
+ * use app\decibel\security\DIpAddress;
+ *
+ * // Load the request object.
+ * $request = DRequest::load();
+ *
+ * $ipAddress = $request->getIdAddress();
+ * if (DIpAddress::checkIpAddress($ipAddress, DIpAddress::FLAG_TRUSTED)) {
+ * 	// Do something secure!
+ * }
+ * @endcode
+ */
+
+/**
+ * @page utility_session Session
+ *
+ * The {@link app::decibel::utility::DSession DSession} class is responsible for managing the session
+ * for each visitor to a Decibel website.
+ *
+ * This singleton class can be loaded as follows:
+ *
+ * @code
+ * use app\decibel\utility\DSession;
+ *
+ * $session = DSession::load();
+ * @endcode
+ *
+ * @note
+ * The {@link app::decibel::utility::DSession DSession} class wraps PHP's session management functionality
+ * to provide an additional level of security and error handling. This class
+ * should be used instead of low-level functionality including
+ * the <code>$_SESSION</code> super-global, and functions including
+ * <code>session_start()</code>, <code>session_destroy()</code>
+ * and <code>session_id()</code>
+ *
+ * @section utility_session_data Session Data
+ *
+ * Session data can be manipulated using one of the following methods.
+ *
+ * @subsection utility_session_data_method DSession Methods
+ *
+ * The {@link app::decibel::utility::DSession DSession::get()} and {@link app::decibel::utility::DSession DSession::set()} methods should
+ * be used to store data in and retrieve data from the session, for example:
+ *
+ * @code
+ * use app\decibel\utility\DSession;
+ *
+ * // Load the session object.
+ * $session = DSession::load();
+ *
+ * // Set some data in the session.
+ * $session->set('myData', 123);
+ *
+ * // Retrieve some data from the session.
+ * debug($session->get('myData'));
+ *
+ * // Retrieve data from the session if it exists already,
+ * // otherwise set a default value.
+ * debug($session->get('myData', 'Default Value'));
+ * @endcode
+ *
+ * @note
+ * The {@link app::decibel::utility::DSession DSession::get()} method returns a pointer to the specified
+ * parameter in the session, therefore manipulation of the returned variable
+ * will result in changing the session data itself.
+ *
+ * @subsection utility_session_data_array Array Access
+ *
+ * The {@link app::decibel::utility::DSession DSession} class implements PHP's <code>ArrayAccess</code> interface,
+ * allowing access to session variables using array syntax, for example:
+ *
+ * @code
+ * use app\decibel\utility\DSession;
+ *
+ * // Load the session object.
+ * $session = DSession::load();
+ *
+ * // Set some data in the session.
+ * $session['myData'] = 123;
+ *
+ * // Retrieve some data from the session.
+ * debug($session['myData']);
+ *
+ * // Remove some data from the session.
+ * unset($session['myData']);
+ * @endcode
+ *
+ * @subsection utility_session_data_namespacing Namespacing Session Data
+ *
+ * Session data may be namespaced by using keys containing hyphen (-) characters.
+ * This allows multiple pieces of data to be individually set, but collectively
+ * removed when required, for example:
+ *
+ * @code
+ * use app\decibel\utility\DSession;
+ *
+ * // Load the session object.
+ * $session = DSession::load();
+ *
+ * // Set some data in the session.
+ * $session['myData-data1'] = 1;
+ * $session['myData-data2'] = 2;
+ * $session['myData-data3'] = 3;
+ *
+ * // Retrieve an individual piece of data.
+ * debug($session['myData-data1']);
+ *
+ * // Retrieve an array containing the collective data.
+ * debug($session['myData']);
+ *
+ * // Remove the data collectively.
+ * unset($session['myData']);
+ * @endcode
+ *
+ * @subsection utility_session_data_pointers Session Data Pointers
+ *
+ * It is sometimes convenient to store a pointer to data in the session.
+ * Due to PHP's implementation of the <code>ArrayAccess</code> interface,
+ * it is not possible to do this using array access syntax, therefore
+ * the {@link app::decibel::utility::DSession DSession::get()} method must be used, for example:
+ *
+ * @code
+ * use app\decibel\utility\DSession;
+ *
+ * // Load the session object.
+ * $session = DSession::load();
+ *
+ * // Set some data in the session.
+ * $session['myData'] = 1;
+ *
+ * // This method will generate an error.
+ * $myData =& $session['myData'];
+ *
+ * // This is the correct way to set a pointer to session data.
+ * $myData =& $session->get('myData');
+ * @endcode
+ *
+ * @subsection utility_session_data_invaliddata Invalid Session Data
+ *
+ * A {@link DInvalidSessionDataException} will be thrown if an attempt
+ * is made to store invalid data in the session using either of these methods.
+ *
+ * Invalid data includes:
+ * - PHP resources (see http://php.net/manual/en/language.types.resource.php)
+ * - Decibel model instances
+ *
+ * @section utility_session_information Session Information
+ *
+ * The {@link app::decibel::utility::DSession DSession::getName()} and {@link app::decibel::utility::DSession DSession::getId()} methods can
+ * be used to determine the session name and ID respectively.
+ *
+ * @section utility_session_management Session Management
+ *
+ * The session will automatically be started by the @ref routing_bootstrap,
+ * if required.
+ *
+ * To check if the session has been started, use the {@link app::decibel::utility::DSession DSession::isStarted()}
+ * method. Additionally, the {@link app::decibel::utility::DSession DSession::start()} and {@link app::decibel::utility::DSession DSession::end()}
+ * methods can be used to manually start and end the session respectively.
+ *
+ * @section utility_session_configuration Session Configuration
+ *
+ * Currently there are no options available for session configuration.
+ *
+ * @section utility_session_cookie Session Cookie
+ *
+ * The following attributes will be applied to the session cookie:
+ * - The domain will be set as per the result
+ *		of {@link app::decibel::utility::DSession DSession::getCookieDomain()}.
+ * - The HttpOnly flag will be set to reduce the risk of XSS attacks.
+ * - The Secure flag will be set if the current page is being accessed
+ *		via the HTTPS protocol.
+ *
+ * @note
+ * See http://en.wikipedia.org/wiki/HTTP_cookie#Secure_and_HttpOnly
+ * for futher information about the HttpOnly and Secure flags.
+ */
+
+/**
+ * @page utility_server Server
+ *
+ * The {@link app::decibel::server::DServer} class wraps low level PHP functions to provide
+ * consistent access to information about the server on which Decibel is running.
+ *
+ * This singleton class can be loaded as follows:
+ *
+ * @code
+ * use app\decibel\server\DServer;
+ *
+ * $server = DServer::load();
+ * @endcode
+ *
+ * See the {@link DServer} API documentation for a full list of available
+ * methods.
+ */

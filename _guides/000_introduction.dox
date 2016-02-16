@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @mainpage	Developer API Documentation
+ *
+ * @section	overview	What is Decibel Core?
+ *
+ * %Decibel is a headless web services API application development framework.
+ * %Decibel has been carefully architected for serious Web deployments.
+ * It is the product of eight years of development utilising our development
+ * team's rich experience of corporate Web development, combined with the
+ * commercial requirement to reduce implementation time.
+ *
+ * %Decibel provides an App framework, allowing developers to easily
+ * implement functionally rich websites with a minimum of code creation, while
+ * still maintaining the ability to upgrade the core application.
+ *
+ * @section getting_started Getting Started
+ *
+ * If you haven't used %Decibel before, the @ref installation Developer Guide
+ * will take you through the process of downloading and installing %Decibel.
+ */

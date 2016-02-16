@@ -1,0 +1,467 @@
+labelFieldEmailError = %1$s is not a valid email address
+labelMissingValue = %1$s must be provided
+labelInvalidFieldEmail= %1$s is not a valid email address
+labelConfirmValueFieldEmail = %1$s confirm must be provided
+labelSameConfirmValueFieldEmail = %1$s confirm and value must be same
+
+app\decibel-yes = Yes
+app\decibel-no = No
+
+app\decibel-added = added
+app\decibel-created = created
+app\decibel-deleted = deleted
+app\decibel-saved = saved
+app\decibel-selected = selected
+app\decibel-updated = updated
+app\decibel-validated = validated
+
+app\decibel-cancel = Cancel
+app\decibel-continue = Continue
+app\decibel-default = Default
+app\decibel-never = Never
+app\decibel-none = None
+app\decibel-unknown = Unknown
+app\decibel-unlimited = Unlimited
+
+app\decibel\adapter\DInvalidAdapterException-message = Adapter of type <code>{#adapter#}</code> cannot be used to adapt object of type <code>{#adaptee#}</code>
+
+app\decibel\adapter\DInvalidAdapterHierarchyException-message = Adapter of type <code>{#adapter#}</code> must extend <code>{#missing#}</code> to match the hierarchy of the adaptable object.
+
+app\decibel\adapter\DMissingAdapterException-message = No adapter of type <code>{#adapter#}</code> can be found to adapt object of type <code>{#adaptee#}</code>
+
+app\decibel\application\DApp-app = App
+app\decibel\application\DApp-uninstalled = un-installed
+
+app\decibel\application\DAppManager-environment = Environment
+
+app\decibel\application\DConfigurationManager-configuration = Configuration
+app\decibel\application\DConfigurationManager-applicationMode = Application Mode
+app\decibel\application\DConfigurationManager-debugMode = Debug Mode
+app\decibel\application\DConfigurationManager-productionMode = Production Mode
+app\decibel\application\DConfigurationManager-testMode = Test Mode
+
+app\decibel\application\DSelectApplicationMode-description = This remote procedure can be used to remotely change the Application Mode used by Decibel.
+app\decibel\application\DSelectApplicationMode-name = Select Application Mode
+
+app\decibel\application\debug\DMissingAppManifestDataException-message = Manifest <code>{#manifest#}</code> is missing required element <code>{#element#}</code>
+app\decibel\application\debug\DMissingAppManifestException-message = Manifest <code>{#manifest#}</code> missing for App <code>{#qualifiedName#}</code>
+
+app\decibel\archive\DArchiveExistsException-message = Cannot overwrite existing archive file '{#filename#}'.
+
+app\decibel\auditing\DAuditRecord-createdBy = Created By
+app\decibel\auditing\DAuditRecord-id = ID
+app\decibel\auditing\DAuditRecord-retentionPeriod = Retention Period
+app\decibel\auditing\DAuditRecord-retentionPeriodDescription = <p>The period of time after which this type of audit record will be automatically purged.</p>
+
+app\decibel\authorise-confirmPassword = Confirm Password
+app\decibel\authorise-cookieAcceptance = I agree that cookies will be stored by my browser to enable this login and manage my preferences.
+app\decibel\authorise-currentPassword = Current Password
+app\decibel\authorise-newPassword = New Password
+app\decibel\authorise-password = Password
+app\decibel\authorise-username = Email Address
+
+app\decibel\authorise\DAuthorisationManager-sessionLimitExceeded = You have exceeded the maximum number of login sessions available. Please logout from any other current sessions and try again.
+
+app\decibel\authorise\auditing\DAuthenticationRecord-displayName = Authorisation Log
+app\decibel\authorise\auditing\DAuthenticationRecord-description = Records authorisation activities including successful logins, expired sessions and failed login attempts.
+app\decibel\authorise\auditing\DAuthenticationRecord-actionLogin = Logged In
+app\decibel\authorise\auditing\DAuthenticationRecord-actionLogout = Logged Out
+app\decibel\authorise\auditing\DAuthenticationRecord-actionFailed = Incorrect Credentials
+app\decibel\authorise\auditing\DAuthenticationRecord-actionExpired = Session Expired
+app\decibel\authorise\auditing\DAuthenticationRecord-actionAutomaticLock = Automatically Locked
+app\decibel\authorise\auditing\DAuthenticationRecord-actionInvalidToken = Invalid CSRF Token
+app\decibel\authorise\auditing\DAuthenticationRecord-actionManualLock = Manually Locked
+app\decibel\authorise\auditing\DAuthenticationRecord-actionChangePassword = Change Password
+app\decibel\authorise\auditing\DAuthenticationRecord-actionSessionLimit = Session Limit Exceeded
+app\decibel\authorise\auditing\DAuthenticationRecord-actionUnlock = Unlocked
+app\decibel\authorise\auditing\DAuthenticationRecord-ipAddress = IP Address
+app\decibel\authorise\auditing\DAuthenticationRecord-username = Username
+app\decibel\authorise\auditing\DAuthenticationRecord-action = Action
+app\decibel\authorise\auditing\DAuthenticationRecord-profile = Profile
+app\decibel\authorise\auditing\DAuthenticationRecord-notes = Notes
+
+app\decibel\authorise\event\DOnPasswordChange-user = User
+app\decibel\authorise\event\DOnPasswordChange-description = This event is triggered whenever a user change the password.
+app\decibel\authorise\event\DOnPasswordChange-name = User Password Change
+
+app\decibel\authorise\DGroup-displayName = User Group
+app\decibel\authorise\DGroup-displayNamePlural = User Groups
+
+app\decibel\authorise\DPrivilege-privilege = Privilege
+
+app\decibel\authorise\DProfile-displayName = User Profile
+app\decibel\authorise\DProfile-displayNamePlural = User Profiles
+
+app\decibel\authorise\DUser-displayName = Website User
+app\decibel\authorise\DUser-displayNamePlural = Website Users
+app\decibel\authorise\DUser-personalDetails = Personal Details
+app\decibel\authorise\DUser-regionalDetails = Regional Details
+app\decibel\authorise\DUser-securityDetails = Security Details
+app\decibel\authorise\DUser-userMustBeSavedBeforePasswordChanged = User must be saved before the password can be changed.
+app\decibel\authorise\DUser-currentPasswordMustBeProvided = Current password must be provided.
+app\decibel\authorise\DUser-currentPasswordInCorrect = Current password is incorrect.
+app\decibel\authorise\DUser-newPasswordMustBeProvided = New password must be provided.
+app\decibel\authorise\DUser-providedPasswordDoNotMatch = The provided passwords do not match.
+app\decibel\authorise\DUser-newPasswordMustBeDifferentFromCurrentPassword = The new password must be different from the current password.
+app\decibel\authorise\DUser-username = Username
+app\decibel\authorise\DUser-email = Email Address
+app\decibel\authorise\DUser-firstName = First Name
+app\decibel\authorise\DUser-lastName = Last Name
+
+app\decibel\authorise\debug\DInvalidPrivilegeException-message = There is no privilege with the name <code>{#name#}</code>.
+
+app\decibel\cache\DCache-cache = Cache
+
+app\decibel\cache\DDatabaseCache-description = Uses the application database to cache data.
+app\decibel\cache\DDatabaseCache-displayName = Database
+
+app\decibel\cache\DNullCache-description = Disables shared memory caching within Decibel. Although database caching will be performed by default, it is not recommended that a production server is run in this manner.
+app\decibel\cache\DNullCache-displayName = No Cache
+
+app\decibel\cache\debug\DKeyTooLongException-message = The provided key '{#key#}' exceeds the maximum length of {#maximumLength#} characters.
+app\decibel\cache\debug\DQualifiedNameRequiredException-message = Qualified Name must be provided when caching new model instances.
+app\decibel\cache\debug\DSerializationException-message = Invalid serialized data <code>{#data#}</code> found in cache <code>{#cache#}</code>
+
+app\decibel\cache\utility\DCacheHealthCheck-componentName = Shared Memory Cache
+
+app\decibel\configuration\debug\DUnknownConfigurationOptionException-message = Unknown configuration option <code>{#option#}</code>.
+
+app\decibel\controller\DInvalidPathPatternException-message = Provided path '{#path#}' is invalid for state <code>{#state#}</code>. {#reason#}
+
+app\decibel\database\debug\DDatabaseConnectionException-message = Could not connect to database server on host '{#hostname#}' (using username '{#username#}').
+
+app\decibel\database\debug\DDatabaseSelectionException-message = Could not select database '{#databaseName#}' on host '{#hostname#}'
+
+app\decibel\database\debug\DInvalidColumnException-message = Column '{#column#}' does not exist.
+
+app\decibel\database\debug\DInvalidHostnameException-message = Could not connect to database server on host '{#hostname#}'. Check that this is the correct host and it is not blocked by a firewall.
+
+app\decibel\database\debug\DInvalidIndexException-message = Index '{#index#}' does not exist.
+
+app\decibel\database\debug\DInvalidParameterValueException-message = Invalid value provided for query parameter <code>{#parameter#}</code>.
+
+app\decibel\database\debug\DInvalidPrunableColumnException-message = Unable to prune column <code>`{#tableName#}`.`{#columnName#}`</code> as the column is in use.
+
+app\decibel\database\debug\DInvalidPrunableTableException-message = Unable to prune table <code>`{#tableName#}``</code> as the table is in use.
+
+app\decibel\database\debug\DInvalidRowException-message = Row number {#rowNumber#} does not exist in the result set.
+
+app\decibel\database\debug\DPacketSizeException-message = Attempted to execute SQL that exceeds server's maximum packet size of {#maxPacketSize#} bytes. Executed SQL ({#querySize#} bytes): <code>{#sql#}</code>
+
+app\decibel\database\maintenance\DPrunableTablesHealthCheck-name = Database
+app\decibel\database\maintenance\DPrunableTablesHealthCheck-errorPrunableFields = There {#prunableFieldCount#|is|are} %s {#prunableFieldCount#|field|fields} that {#prunableFieldCount#|requires|require} pruning from the database. Run the Prune Database task to remove redundant fields from the database.
+app\decibel\database\maintenance\DPrunableTablesHealthCheck-errorPrunableTables = There {#prunableTableCount#|is|are} %s {#prunableTableCount#|table|tables} that {#prunableTableCount#|requires|require} pruning from the database. Run the Prune Database task to remove redundant tables from the database.
+
+app\decibel\database\schema\DInvalidComparisonException-message = Unable to compare schema elements. {#reason}
+
+app\decibel\debug\DDeprecatedException-message = <code>{#deprecated#}</code> has been deprecated in favour of <code>{#replacement#}</code>
+
+app\decibel\debug\DInvalidMethodException-message = Called method <code>{#method#}</code> does not exist.
+
+app\decibel\debug\DInvalidMethodCallException-message = Invalid call to method <code>{#method#}</code>. {#reason#}
+
+app\decibel\debug\DInvalidPropertyException-message = No parameter exists with the name <code>{#name#}</code>
+
+app\decibel\debug\DInvalidParameterValueException-message = Invalid value provided for parameter <code>{#name#}</code> of <code>{#owner#}</code>, expected: {#expected#}
+
+app\decibel\debug\DInvalidStackFrameException-message = No stack frame exists at the depth {#depth#} within this backtrace.
+
+app\decibel\debug\DNotImplementedException-message = <code>{#method#}</code> must be implemented.
+
+app\decibel\debug\DOnErrorHandled-description = Triggered when an error is successfully handled and logged.
+app\decibel\debug\DOnErrorHandled-name = Error Handled
+app\decibel\debug\DOnErrorHandled-error = Error Message
+
+app\decibel\debug\DOnProfilerReport-description = Triggered when the profiler issues a report.
+app\decibel\debug\DOnProfilerReport-name = Profiler Report Issued
+
+app\decibel\debug\DRecursionException-message = Recursion detected in method <code>{#method#}</code>
+
+app\decibel\debug\DReadOnlyParameterException-message = The value of parameter <code>{#name#}</code> of <code>{#owner#}</code> cannot be modified. {#message#}
+
+app\decibel\decorator\DInvalidDecoratorException-message = Decorator of type <code>{#decorator#}</code> cannot be used to decorate object of type <code>{#decoratable#}</code>
+
+app\decibel\decorator\DInvalidDecoratorHierarchyException-message = Decorator of type <code>{#decorator#}</code> must extend <code>{#missing#}</code> to match the hierarchy of the decorated object.
+
+app\decibel\decorator\DMissingDecoratorException-message = No decorator of type <code>{#decorator#}</code> can be found to decorate object of type <code>{#decoratable#}</code>
+
+app\decibel\event\debug\DDuplicateSubscriptionException-message = Observer <code>{#observer#}</code> is already subscribed to the <code>{#event#}</code> event for dispatcher <code>{#dispatcher#}</code>
+app\decibel\event\debug\DInvalidEventException-message = Event <code>{#event#}</code> is not a valid for dispatcher <code>{#dispatcher#}</code>
+app\decibel\event\debug\DInvalidObserverException-message = Subscriber <code>{#observer#}</code> is not a valid observer.
+app\decibel\event\debug\DMissingEventParameterException-message = Parameter <code>{#parameter#}</code> must be present in the <code>$parameters</code> variable when creating a <code>{#event#}</code> emailable event.
+
+app\decibel\file\DFileAccessException-message = Unable to access file <code>{#filename#}</code>. {#reason#}
+
+app\decibel\file\DFileExistsException-message = File <code>{#filename#}</code> already exists.
+
+app\decibel\file\DFileNotFoundException-message = File <code>{#filename#}</code> not found.
+
+app\decibel\health\DHealthCheckResult-ignore = Ignore Health Check Message
+
+app\decibel\hosting\DConfigurationFileException-message = Unable to write web server configuration file <code>{#filename#}</code>. {#message#}
+
+app\decibel\hosting\DApache-displayName = Apache HTTPD
+app\decibel\hosting\DApache-description = Open-source HTTP server for modern operating systems including UNIX and Windows.
+
+app\decibel\hosting\DNginx-displayName = Nginx
+app\decibel\hosting\DNginx-description = High-performance HTTP server and reverse proxy.
+
+app\decibel\http\debug\DInvalidCookieException-message = Invalid cookie parameter provided. {#reason#}
+app\decibel\http\debug\DMalformedUrlException-message = URL '{#url#}' is malformed.
+app\decibel\http\debug\DUnknownCookieException-message = No cookie exists with the name <code>{#name#}</code>.
+
+app\decibel\http\request\DFileUpload-errorConnection = A connection error occurred while uploading the file. Please try again.
+app\decibel\http\request\DFileUpload-errorMalicious = This file appears to have been maliciously uploaded.
+app\decibel\http\request\DFileUpload-errorServer = The server is not correctly configured for file uploads. Please contact your website administrator.
+app\decibel\http\request\DFileUpload-errorSize = The uploaded file exceeds the maximum allowable size of {#size#}
+
+app\decibel\model\DLightModel-name = Name
+
+app\decibel\model\debug\DInvalidFieldValueException-message = Invalid value <code>{#value#}</code> provided for field <code>{#fieldName#}</code>. Expected: {#expected#}
+
+app\decibel\model\DModel-changeHistory = Change History
+app\decibel\model\DModel-changeHistoryRecord = {#time#} by {#user#}
+app\decibel\model\DModel-changeHistoryDescription = <p>The information below shows a record of modifications made to this {#displayName#}.</p>
+app\decibel\model\DModel-created = Created
+app\decibel\model\DModel-createdDescription = <p>The date and time at which this {#displayName#} was created.</p>
+app\decibel\model\DModel-createdBy = Created By
+app\decibel\model\DModel-additional = Additional
+app\decibel\model\DModel-lastUpdated = Last Updated
+app\decibel\model\DModel-lastUpdatedBy = Last Updated By
+app\decibel\model\DModel-links = Links
+app\decibel\model\DModel-linksDescription = <p>The following objects have been linked to this {#displayName#}.<br /><strong>Note</strong>: You will not be able to delete this {#displayName#} if any links exist.</p>
+app\decibel\model\DModel-linksLimit = <p><strong>Note</strong>: Only the first {#shown#} links are shown, but there are {#total#} links in total.</p>
+app\decibel\model\DModel-linksNone = This {#displayName#} is not linked to by any other data.
+app\decibel\model\DModel-name = Name
+app\decibel\model\DModel-references = References
+app\decibel\model\DModel-referencesDescription = <p>The following objects have referenced this {#displayName#}.<br /><strong>Note</strong>: References will be removed automatically if this {#displayName#} is deleted.</p>
+app\decibel\model\DModel-referencesLimit = <p><strong>Note</strong>: Only the first {#shown#} references are shown, but there are {#total#} references in total.</p>
+app\decibel\model\DModel-referencesNone = This {#displayName#} is not referenced by any other data.
+app\decibel\model\DModel-usage = Usage
+
+app\decibel\model\DModelActionRecord-displayName = Model Action Log
+app\decibel\model\DModelActionRecord-description = Records actions performed on model instances including creating, updating and deleting.
+
+app\decibel\model\DPersistableDefinition-created = Created
+
+app\decibel\model\debug\DAbstractModelInstantiationException-message = Unable to create an instance of abstract model <code>{#model#}</code>.
+app\decibel\model\debug\DDuplicateConfigurationOptionException-message = Attempting to add a configuration option with duplicate name <code>#name#</code> to <code>#model#</code>
+app\decibel\model\debug\DDuplicateFieldNameException-message = Attempting to add a field with duplicate name <code>#name#</code> to <code>#model#</code>. The field has already been added to <code>#existing#</code>
+app\decibel\model\debug\DInvalidDefinitionHierarchyException-message = Inheritance hierarchy of <code>{#definition#}</code> does not match that of <code>{#model#}</code>
+app\decibel\model\debug\DInvalidSearchException-message = Unable to perform requested search. {#reason#}
+app\decibel\model\debug\DRecursiveModelSaveException-message = Recursive save action detected on <code>{#qualifiedName#}</code> instance with ID {#id#}
+app\decibel\model\debug\DSearchAlreadyExecutedException-message = Cannot add conditions to a model search that has already been executed.
+app\decibel\model\debug\DUnknownModelInstanceException-message = No model exists with the ID <code>{#id#}</code> and qualified name <code>{#qualifiedName#}</code>.
+app\decibel\model\debug\DUnsupportedFieldTypeException-message = Unable to add <code>{#field#}</code> fields to <code>{#definition#}</code>
+
+app\decibel\model\export\DFieldExportOptions-group = Export Group
+app\decibel\model\export\DFieldExportOptions-selected = Pre-selected
+
+app\decibel\model\field\DField-unknownValue = Unknown Value
+app\decibel\model\field\DField-valueMustBeProvided = #fieldName# must be provided.
+app\decibel\model\field\DField-valueMustBeProvidedInLanguage = #fieldName# must be provided in {#languageName#}.
+
+app\decibel\model\field\DInvalidFieldNameException-message = Invalid field name <code>{#name#}</code>. Field names must contain only alpha-numeric characters and underscores (_) and must begin with an alphbetic character.
+
+app\decibel\model\field\DReservedFieldNameException-message = Invalid field name <code>{#name#}</code>. This name is reserved.
+
+app\decibel\model\index\DInvalidIndexFieldException-message = Cannot add field <code>{#fieldName#}code> to {#indexType#} <code>{#indexName#}</code>. {#reason#}
+app\decibel\model\index\DUniqueIndex-message = A {#existingObjectDisplayName#} with this {#fieldNamesStringValue#} already exists.
+
+app\decibel\model\utilisation\DUtilisationRecord-displayName = Utilisation
+app\decibel\model\utilisation\DUtilisationRecord-description = Provides an index of model utilisation.
+
+app\decibel\packaging\DInvalidPackageException-message = Invalid package <code>{#location#}</code>. {#reason#}
+
+app\decibel\packaging\DInvalidRepositoryException-message = Invalid repository <code>{#location#}</code>. {#reason#}
+
+app\decibel\packaging\DPackageCompressionException-message = Unable to compress package. {#reason#}
+
+app\decibel\packaging\DPackageGenerationException-message = Package unable to be generated. {#reason#}
+
+app\decibel\packaging\DThirdPartyDependency-displayName = Third-party
+
+app\decibel\process\DInvalidProcessIdException-message = No process exists with the process ID <code>{#pid#}</code>.
+
+app\decibel\process\DProcessExecutionException-message = An error occurred while running the command <code>{#command#}</code>. {#stdErr#}
+
+app\decibel\process\DProcessTimeoutException-message = A timeout occurred while executing the command <code>{#command#}</code>.
+
+app\decibel\queue\DPersistableQueue-id = ID
+app\decibel\queue\DPersistableQueue-createdBy = Created By
+app\decibel\queue\DPersistableQueue-processId = Process ID
+
+app\decibel\regional\DInvalidLabelVariableException-message = Invalid value '{#value#}' provided for variable <code>{#variable#}</code> when rendering label <code>{#namespace#}-{#name#}</code>
+
+app\decibel\regional\DMissingLabelVariableException-message = Missing variable <code>{#variable#}</code> when rendering label <code>{#namespace#}-{#name#}</code>
+
+app\decibel\regional\DMissingPluralFormException-message = No plural form for variable <code>{#variable#}</code> when translating label <code>{#namespace#}-{#name#}</code> in the language <code>{#languageCode#}</code>, plural form <code>N={#pluralForm#}</code>
+
+app\decibel\regional\DUnknownLabelException-message = Unable to locate label <code>{#namespace#}-{#name#}</code> in the language <code>{#languageCode#}</code>
+
+app\decibel\regional\language\DMissingLanguageDefinitionException-message = Language definition is missing for language <code>{#languageCode#}</code>. Please define a class that extends app\decibel\regional\language\DLanguageDefinition.
+
+app\decibel\registry\DInvalidClassInheritanceException-message = Class <code>{#className#}</code> cannot {#inheritanceType#} <code>{#parentClassName#}</code>. {#reason#}
+app\decibel\registry\DInvalidClassNameException-message = Class <code>{#qualifiedName#}</code> does not exist.
+app\decibel\registry\DInvalidDependencyException-message = Requested dependency <code>{#dependency#}</code> is not valid for hive <code>{#hive#}</code>.
+
+app\decibel\router\DRpcRouter-errorHttps = This page must be accessed via the HTTPS protocol.
+app\decibel\router\DRpcRouter-errorInvalidRpc = Invalid remote procedure <code>{#qualifiedName#}</code>
+
+app\decibel\router\DOnHttpError-name = HTTP Error Returned
+app\decibel\router\DOnHttpError-description = Triggered when an HTTP error is returned to the client.
+
+app\decibel\router\DOnHttpResponse-name = HTTP Response Returned
+app\decibel\router\DOnHttpResponse-description = Triggered when an HTTP response is returned to the client.
+
+app\decibel\rpc\DHandshake-remoteProcedure = Remote Procedure
+
+app\decibel\rpc\auditing\DOutboundRequestRecord-displayName = Outbound Request Log
+app\decibel\rpc\auditing\DOutboundRequestRecord-description = Records information about outbound API requests made by this server.
+
+app\decibel\rpc\auditing\DRpcLog-displayName = RPC Log
+app\decibel\rpc\auditing\DRpcLog-description = Records information about remote procedure calls that can be used when debugging integrations.
+
+app\decibel\rpc\debug\DDuplicateHeaderException-message = Header "{#header#}" has already been added to this request.
+app\decibel\rpc\debug\DInvalidRemoteProcedureCallException-message = Unable to execute remote procedure on server <code>{#location#}</code>.
+app\decibel\rpc\debug\DInvalidRemoteProcedureException-message = No remote procedure exists with the qualified name <code>{#qualifiedName#}</code>
+app\decibel\rpc\debug\DInvalidRpcParameterException-message = Invalid value \"{#value#}\" provided for parameter <code>{#parameter#}</code>, expected: {#expected#}
+app\decibel\rpc\debug\DMissingRpcParameterException-message = Required parameter <code>{#parameter#}</code> has not been provided.
+app\decibel\rpc\debug\DRemoteServerBadRequestException-message = The remote server was unwilling to accept the request. Check that you have provided the correct parameters.
+app\decibel\rpc\debug\DRemoteServerException-message = Remote server returned HTTP error code <code>{#httpCode#}</code>
+app\decibel\rpc\debug\DRemoteServerNotFoundException-message = The specified endpoint was not accessible on the remote server.
+app\decibel\rpc\debug\DRemoteServerRedirectException-message = The remote server issued a redirect.
+app\decibel\rpc\debug\DRemoteServerServiceUnavailableException-message = The remote server encountered an error while executing this request.
+app\decibel\rpc\debug\DRemoteServerUnauthorisedException-message = The remote server denied access to this request. Check that you have provided the correct credentials.
+
+app\decibel\security\DCustomSecurityPolicy-description = Allows complete customisation of the security policy used by Decibel.
+app\decibel\security\DCustomSecurityPolicy-name = Custom
+
+app\decibel\security\DDefaultSecurityPolicy-description = The default Decibel security policy safeguards the security of the website and minimises low priority warnings generated by penetration tests.
+app\decibel\security\DDefaultSecurityPolicy-name = Default
+
+app\decibel\security\DForbiddenRequestLog-description = Records information about requests forbidden by the Web Application Firewall.
+app\decibel\security\DForbiddenRequestLog-displayName = Forbidden Request Log
+
+app\decibel\security\DIpAddress-displayName = IP Address
+app\decibel\security\DIpAddress-displayNamePlural = IP Addresses
+app\decibel\security\DIpAddress-unknown = Unknown
+app\decibel\security\DIpAddress-known = Known
+app\decibel\security\DIpAddress-trusted = Trusted
+app\decibel\security\DIpAddress-blocked = Blocked
+app\decibel\security\DIpAddress-unableToBlock = Unable to block the current IP address.
+app\decibel\security\DIpAddress-blockingDisabled = Decibel is not currently configured to block IP addresses. Please enable checking of blocked IP addresses in the Security Configuration screen to ensure that this IP address is blocked from accessing this website.
+
+app\decibel\security\DPciSecurityPolicy-description = This policy enforces the minimum security attributes required for a website to meet PCI DSS Compliance. Please note that selecting this option does not guarantee the PCI DSS Compliance of the website, as many other factors are also involved.
+app\decibel\security\DPciSecurityPolicy-name = PCI&nbsp;DSS
+
+app\decibel\security\DSecurityPolicy-securityPolicy = Security Policy
+app\decibel\security\DSecurityPolicy-authFactorsOne = One factor required (e.g. password)
+app\decibel\security\DSecurityPolicy-authFactorsTwo = Two factors required (e.g. password and token)
+app\decibel\security\DSecurityPolicy-overrideWeaker = Override with weaker policies allowed
+app\decibel\security\DSecurityPolicy-overrideNone = No override allowed
+app\decibel\security\DSecurityPolicy-overrideStronger = Override with stronger policies only
+app\decibel\security\DSecurityPolicy-passwordTest = Password test
+app\decibel\security\DSecurityPolicy-passed = passed
+app\decibel\security\DSecurityPolicy-passwordLengthError = A minimum password length of {#minimumPasswordLength#} characters is required.
+app\decibel\security\DSecurityPolicy-passwordStrengthLow = Low (alphabetic characters only)
+app\decibel\security\DSecurityPolicy-passwordStrengthMedium = Medium (alphabetic and numeric characters)
+app\decibel\security\DSecurityPolicy-passwordStrengthHigh = High (alphabetic, numeric and other characters)
+app\decibel\security\DSecurityPolicy-highPasswordStrengthError = At least one non-alpha-numeric character must be included in the password (e.g. £, % or *)
+app\decibel\security\DSecurityPolicy-mediumPasswordStrengthError = At least one alphabetic and one numeric character must be included in the password.
+app\decibel\security\DSecurityPolicy-overrideCondition = Override Condition
+app\decibel\security\DSecurityPolicy-overrideConditionDescription = <p>The following conditions will apply when overriding this security policy at a profile level.</p>
+app\decibel\security\DSecurityPolicy-inactiveLockout = Inactive Lockout
+app\decibel\security\DSecurityPolicy-inactiveLockoutDescription = <p>Accounts will be automatically expired if they have not been utilised within the selected time period.</p>
+app\decibel\security\DSecurityPolicy-failedLoginLockout = Failed Login Lockout
+app\decibel\security\DSecurityPolicy-failedLoginLockoutDescription = <p>Accounts will be automatically locked out when more than the selected number of failed login attempts have been detected. The length of the lockout period is defined by the Lockout Length option.</p>
+app\decibel\security\DSecurityPolicy-lockoutLength = Lockout Length
+app\decibel\security\DSecurityPolicy-lockoutLengthDescription = <p>The length of time that a temporary account lockout will last for.</p>
+app\decibel\security\DSecurityPolicy-authFactorRequirement = Authentication Factors
+app\decibel\security\DSecurityPolicy-authFactorRequirementDescription = <p>The number of authentication factors required for user authentication.</p><p>Only authentication methods with the specified number of factors (or greater) will be enabled to process logins for this type of account.</p>
+app\decibel\security\DSecurityPolicy-passwordStrength = Password Strength
+app\decibel\security\DSecurityPolicy-passwordStrengthDescription = <p>The minimum strength required for passwords.</p>
+app\decibel\security\DSecurityPolicy-passwordLife = Password Life
+app\decibel\security\DSecurityPolicy-passwordLifeDescription = <p>The number of days between compulsory password changes.</p>
+app\decibel\security\DSecurityPolicy-minimumPasswordLength = Minimum Password Length
+app\decibel\security\DSecurityPolicy-minimumPasswordLengthDescription = <p>The minimum number of characters required for a password.</p>
+app\decibel\security\DSecurityPolicy-rememberedPasswords = Remembered Passwords
+app\decibel\security\DSecurityPolicy-rememberedPasswordsDescription = <p>The number of previous passwords for user accounts that will be remembered by Decibel.</p><p>New passwords must not match any of the remembered passwords when changed by a user.</p>
+app\decibel\security\DSecurityPolicy-sessionLimit = Session Limit
+app\decibel\security\DSecurityPolicy-maximumSessionsDescription = <p>The maximum number of active sessions available for each user account.</p>
+app\decibel\security\DSecurityPolicy-sessionTimeout = Session Timeout
+app\decibel\security\DSecurityPolicy-sessionTimeoutDescription = <p>The number of minutes that can pass before inactive user logins are automatically timed out.</p>
+
+app\decibel\service\DServiceContainer-tested = tested
+
+app\decibel\ssl\DCertificateParseException-message = Unable to parse certificate.
+
+app\decibel\ssl\DPrivateKeyGenerationException-message = Unable to generate private key.
+
+app\decibel\ssl\DInvalidCertificateException-message = Unable to retrieve SSL certificate for domain <code>{#domain#}</code>.
+
+app\decibel\ssl\DPrivateKeyParseException-message = Unable to parse private key.
+
+app\decibel\ssl\DPublicKeyParseException-message = Unable to parse public key.
+
+app\decibel\ssl\DSigningRequestGenerationException-message = Unable to generate signing request for common name <code>{#commonName#}</code>
+
+app\decibel\ssl\DSslConfigurationException-message = OpenSSL incorrectly configured. {#message#}
+
+app\decibel\stream\DStreamReadException-message = Error reading from stream {#stream#}. {#message#}
+
+app\decibel\stream\DStreamSeekException-message = Error seeking in stream {#stream#}. {#message#}
+
+app\decibel\stream\DStreamWriteException-message = Error writing to stream {#stream#}. {#message#}
+
+app\decibel\task\DNightlyTask-name = Nightly
+
+app\decibel\task\DOnTaskExecute-description = Triggered when a scheduled event is executed.
+app\decibel\task\DOnTaskExecute-name = Scheduled Event Executed
+
+app\decibel\task\DOnTaskSchedule-description = Triggered when a scheduled event is scheduled for execution.
+app\decibel\task\DOnTaskSchedule-name = Scheduled Event Scheduled
+
+app\decibel\task\DRegularTask-name = Regular
+
+app\decibel\task\DScheduledTask-name = Scheduled
+app\decibel\task\DScheduledTask-rescheduled = rescheduled
+app\decibel\task\DScheduledTask-scheduled = scheduled
+app\decibel\task\DScheduledTask-scheduledTime = {#date#} at {#time#}
+app\decibel\task\DScheduledTask-rescheduleTask = Re-schedule Task
+app\decibel\task\DScheduledTask-errorMode = Task is unable to be executed in the current application mode.
+
+app\decibel\task\DTask-cancelled = cancelled
+app\decibel\task\DTask-task = Task
+app\decibel\task\DTask-tasks = Tasks
+app\decibel\task\DTask-triggered = triggered
+app\decibel\task\DTask-type = Type
+app\decibel\task\DTask-owner = Owner
+app\decibel\task\DTask-progress = Progress
+app\decibel\task\DTask-initiating = Initiating
+app\decibel\task\DTask-inProgress = In Progress
+app\decibel\task\DTask-cancelTask = Cancel Task
+
+app\decibel\task\DTaskLog-displayName = Task Log
+app\decibel\task\DTaskLog-description = Records information about the execution of scheduled and queued tasks.
+
+app\decibel\task\DTaskSchedule-displayName = Task Schedule
+app\decibel\task\DTaskSchedule-description = Maintains the execution schedule for scheduled tasks.
+
+app\decibel\test\DInvalidQueryParametersException-message = Invalid query parameters provided. Expected: {#expected#}, actual: {#actual#}
+
+app\decibel\test\DInvalidResultsException-message = Provided results are incompatible with specified columns. Expected: Array containing zero or more arrays, each with exactly {#columnCount#} elements.
+
+app\decibel\utility\DInvalidPageSizeException-message = Invalid page size <code>{#size#}</code> provided.
+
+app\decibel\utility\DInvalidSessionDataException-message = Invalid session data provided. {#reason#}
+
+app\decibel\utility\DInvalidSessionPathException-message = Invalid session path '{#path#}'. Check that this location is writable by the web server user ({#username#}).
+
+app\decibel\utility\DResult-error = {#subject#} unable to be {#action#}
+app\decibel\utility\DResult-success = {#subject#} successfully {#action#}
+app\decibel\utility\DResult-warning = {#subject#} successfully {#action#}
+
+app\decibel\widget\DTextField-charactersRemaining = <span class="counter">{#currentCount#}</span> characters remaining
+
+app\decibel\xml\DDocumentParseException-message = Error parsing document <code>{#filename#}</code> on line {#line#}, column {#column#}. {#message#}

@@ -1,0 +1,941 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest>
+
+	<version>6.8.0-dev</version>
+	<name>Decibel Framework</name>
+	<copyright>2008-2016 Decibel Technology Limited</copyright>
+
+	<authors>
+		<author>
+			<name>Decibel Technology</name>
+			<email>team@decibeltechnology.com</email>
+		</author>
+	</authors>
+
+	<licence>
+		<location>http://www.decibeltechnology.com/licence/</location>
+	</licence>
+
+	<dependencies>
+
+		<dependency type="app\decibel\packaging\DPhpDependency">
+			<required>5.4.16</required>
+			<!--recommended>5.5.30</recommended-->
+			<!--message>PHP version 5.4.16 is required, although 5.5.30 or higher should be installed to ensure maximum application performance and security.</message-->
+		</dependency>
+
+		<dependency type="app\decibel\packaging\DMySQLDependency">
+			<required>true</required>
+			<message>PHP &lt;code&gt;mysqli&lt;/code&gt; extension is required.</message>
+		</dependency>
+
+		<!-- PHP EXTENSIONS -->
+		<dependency type="app\decibel\packaging\DPhpExtensionDependency">
+			<name>curl</name>
+			<required>true</required>
+			<message>PHP &lt;code&gt;curl&lt;/code&gt; extension is required by the Decibel update process.</message>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpExtensionDependency">
+			<name>gd</name>
+			<recommended>true</recommended>
+			<message>PHP &lt;code&gt;gd&lt;/code&gt; extension is required to allow cropping and resizing of images.
+			</message>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpExtensionDependency">
+			<name>intl</name>
+			<recommended>true</recommended>
+			<message>PHP &lt;code&gt;intl&lt;/code&gt; extension is required to provide full regional and language
+				support.
+			</message>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpExtensionDependency">
+			<name>ionCube Loader</name>
+			<required>true</required>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpExtensionDependency">
+			<name>json</name>
+			<required>true</required>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpExtensionDependency">
+			<name>mbstring</name>
+			<required>true</required>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpExtensionDependency">
+			<name>mcrypt</name>
+			<required>true</required>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpExtensionDependency">
+			<name>openssl</name>
+			<required>true</required>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpExtensionDependency">
+			<name>Phar</name>
+			<required>true</required>
+			<message>PHP &lt;code&gt;phar&lt;/code&gt; extension must be available to enable backup and appliction
+				update functionality within Decibel.
+			</message>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpExtensionDependency">
+			<name>zip</name>
+			<required>true</required>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpExtensionDependency">
+			<name>zlib</name>
+			<required>true</required>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpExtensionDependency">
+			<name>APC,eAccelerator,XCache</name>
+			<recommended>true</recommended>
+			<message>An op-code cache is highly recommended when running Decibel in a production environment. Decibel
+				has been tested using eAccelerator, XCache and APC.
+			</message>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpExtensionDependency">
+			<name>memcache</name>
+			<recommended>true</recommended>
+			<message>Memcache (or an equivalent shared memory cache) is highly recommended when running Decibel in a
+				production environment.
+			</message>
+		</dependency>
+
+		<!-- PHP INI SETTINGS -->
+		<dependency type="app\decibel\packaging\DPhpIniDependency">
+			<name>safe_mode</name>
+			<required>false</required>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpIniDependency">
+			<name>magic_quotes_gpc</name>
+			<required>false</required>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpIniDependency">
+			<name>magic_quotes_runtime</name>
+			<required>false</required>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpIniDependency">
+			<name>file_uploads</name>
+			<required>true</required>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpIniDependency">
+			<name>register_globals</name>
+			<recommended>false</recommended>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpIniDependency">
+			<name>auto_globals_jit</name>
+			<recommended>true</recommended>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpIniDependency">
+			<name>asp_tags</name>
+			<recommended>false</recommended>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpIniDependency">
+			<name>zlib.output_compression</name>
+			<recommended>false</recommended>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpIniDependency">
+			<name>implicit_flush</name>
+			<recommended>false</recommended>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpIniDependency">
+			<name>define_syslog_variables</name>
+			<recommended>false</recommended>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpIniDependency">
+			<name>tidy.clean_output</name>
+			<recommended>false</recommended>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpIniDependency">
+			<name>phar.readonly</name>
+			<recommended>false</recommended>
+			<message>PHP &lt;code&gt;phar.readonly&lt;/code&gt; option must be set to 'Off' to enable backup and
+				packaging functionality within Decibel.
+			</message>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpIniDependency">
+			<name>session.auto_start</name>
+			<recommended>false</recommended>
+			<message>PHP &lt;code&gt;session.auto_start&lt;/code&gt; option must be set to 'Off' for a website to be
+				compliant with EU Cookie laws.
+			</message>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpIniDependency">
+			<name>session.use_cookies</name>
+			<recommended>true</recommended>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpIniDependency">
+			<mode>production</mode>
+			<name>display_startup_errors</name>
+			<recommended>false</recommended>
+			<message>PHP &lt;code&gt;display_startup_errors&lt;/code&gt; option should be set to 'Off' when running
+				Decibel in Production mode
+			</message>
+		</dependency>
+		<dependency type="app\decibel\packaging\DPhpIniDependency">
+			<mode>production</mode>
+			<name>track_errors</name>
+			<recommended>false</recommended>
+		</dependency>
+
+		<!-- THIRD PARTY DEPENDENCIES -->
+		<dependency type="app\decibel\packaging\DThirdPartyDependency">
+			<name>jquery-cookie</name>
+			<location>https://github.com/carhartl/jquery-cookie</location>
+			<licence>MIT</licence>
+		</dependency>
+
+	</dependencies>
+
+	<changelog>
+		<release version="6.3.0">
+			<change bugid="00001" audience="developer">Error and debug messages contain HTML tags when reported during
+				CLI execution
+			</change>
+			<change bugid="00002" audience="developer">Utilisation index contains invalid referential integrity
+				relationships between DChildObject models and their parents
+			</change>
+			<change bugid="00004" audience="developer">app\decibel\utility\DString::stripHtml() function does not remove
+				object or iframe tags
+			</change>
+			<change audience="developer" type="change" api="app\decibel\authorise\DAuthorisationManager">Re-wrote the
+				authorisation manager to introduce a modular authorisation system based on Identification,
+				Authentication and Post-login Tasks
+			</change>
+			<change audience="developer" type="deprecation"
+					api="app\decibel\model\field\DRelationalField::relationalIntegrity">Deprecated the
+				app\decibel\model\field\DRelationalField::maintainIntegrity parameter in favour of
+				app\decibel\model\field\DRelationalField::relationalIntegrity
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\model\DLightModel">Added the
+				app\decibel\model\DLightModel class for very large data sets
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\router\DRouter::$router">Added the
+				app\decibel\router\DRouter::$router parameter allowing access to the router processing the current
+				request
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\utility\DPagination::calculatePaging()">Added
+				the $includeAll parameter to control whether unneccessary pagination controls are included in the
+				pagination
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\http\request\DRequest::isRpc()">Added the
+				app\decibel\http\request\DRequest::isRpc() function to determine if the current request was invoked by a
+				remote procedure call
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\utility\DResult::hasMessages()">Added the
+				app\decibel\utility\DResult::hasMessages() function to determine if a result has any messages
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\utility\DSession::get()">Added the
+				app\decibel\utility\DSession::get() function to retrieve a session variable
+			</change>
+			<change audience="developer" type="performance">Scripts and stylesheets named with a ".min.xxx" extension
+				are now ignored by the minifier
+			</change>
+		</release>
+		<release version="6.3.0.1">
+			<change bugid="00005" audience="developer" api="app\decibel\authorise\DAuthorisationManager::login()">Forced
+				logins will not be completed successfully if a user account has one or more active post-login tasks.
+			</change>
+		</release>
+		<release version="6.3.1">
+			<change audience="editor" type="change">The name of the user that created and/or the name of the user that
+				updated publishable data is not longer included in the search index by default
+			</change>
+		</release>
+		<release version="6.3.2">
+			<change audience="developer" type="change">Improved debugging output when running Decibel as on CLI</change>
+			<change audience="developer" type="feature" api="app\decibel\model\field\DOneToManyRelationalField">Added
+				minLinks and maxLinks parameters to control minimum and maximum available selections
+			</change>
+		</release>
+		<release version="6.3.3">
+			<change audience="developer" type="feature">Navigation preview images and descriptions can now be added to
+				themes.
+			</change>
+			<change audience="developer" type="feature">Theme images referenced within bundled stylesheets are now
+				automatically embedded within the style sheet as base 64 encoded data where they are smaller than 1024
+				bytes. This significantly reduces the number of requests required to render a page.
+			</change>
+			<change audience="developer" type="feature">Added the Developer Health Check to automatically test for
+				common developer errors.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\model\DBaseModel::generateRandomModels()">Added
+				the app\decibel\model\DBaseModel::generateRandomModels() function to allow developers to quickly
+				generate randomised content for testing purposes.
+			</change>
+		</release>
+		<release version="6.3.3.1">
+			<change audience="developer" type="change">Added support for the XCache and APC op-code caches to the Health
+				Check.
+			</change>
+			<change bugid="00007" audience="developer">Available languages are not correctly saved for some
+				multi-lingual models with language inheritance enabled.
+			</change>
+		</release>
+		<release version="6.4.0">
+			<change audience="developer" type="feature" api="app\decibel\utility\DUtilityData::fromArray()">Added the
+				app\decibel\utility\DUtilityData::fromArray() function to allow creation of a DUtilityData object from
+				an array.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\model\search\DSearchCondition">Added the
+				app\decibel\model\search\DSearchCondition class allowing the creation of custom search methods while
+				using the app\decibel\model\DModelSearch class.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\model\search\DOrCondition">Added the
+				app\decibel\model\search\DOrCondition class allowing the use of OR searches within the
+				app\decibel\model\DModelSearch class.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\utility\DFileUpload::copyTo()">Added the
+				app\decibel\utility\DFileUpload::copyTo() function to copy an uploaded file.
+			</change>
+			<change audience="developer" type="performance">HTML tidying no longer occurs on administration pages,
+				resulting in a small performance improvement.
+			</change>
+		</release>
+		<release version="6.4.1">
+			<change audience="developer" type="feature" api="app\decibel\configuration\DOnConfigurationChange">Added the
+				app\decibel\configuration\DOnConfigurationChange event to allow changes to be made following an update
+				to configuration options.
+			</change>
+		</release>
+		<release version="6.4.2">
+			<change audience="developer" type="performance">Improved the performance of the model search classes in
+				certain situations.
+			</change>
+			<change audience="editor" type="feature">Added an Event Manager Health Check to determine whether the Event
+				Manager is functioning correctly.
+			</change>
+			<change bugid="00009" audience="developer" api="app\decibel\model\DModel">Requesting a multi-lingual text
+				value without a language code favours the default language of the model over the current language.
+			</change>
+		</release>
+		<release version="6.4.2.1">
+			<change audience="developer" type="feature">Added CRC32 checksums to installer packages.</change>
+			<change audience="developer" type="performance">Various performance improvements when loading from an empty
+				cache.
+			</change>
+			<change bugid="00010" audience="developer" api="app\decibel\model\DModelSearch">Incorrect caching of model
+				search results can result in a notice error in some situations.
+			</change>
+		</release>
+		<release version="6.4.3">
+			<change audience="developer" type="performance">Added buffering to the caching system to avoid repetitive
+				cache clearing commands within a transactional operation.
+			</change>
+			<change audience="developer" type="performance">Database caching is now optional and it is recommended that
+				this is disabled on any production site with a properly tuned shared memory cache.
+			</change>
+			<change audience="developer" type="performance" api="app\decibel\model\DModel::free()">Improved the
+				app\decibel\model\DModel::free() method.
+			</change>
+		</release>
+		<release version="6.4.3.1">
+			<change bugid="00013" audience="editor">Language options are not always syncronised with the available
+				languages of the model instance being edited.
+			</change>
+			<change audience="editor" type="feature">Avaliable languages can now be selected on the first step of model
+				instance creation.
+			</change>
+		</release>
+		<release version="6.4.3.2">
+			<change bugid="00014" audience="editor">Menu items with external URLs do not link correctly.</change>
+		</release>
+		<release version="6.4.3.3">
+			<change bugid="00015" audience="editor">Checksum generation can cause out of memory errors when adding large
+				files to packages or backups.
+			</change>
+		</release>
+		<release version="6.4.4">
+			<change audience="developer" type="feature">Added the Performance Log to assist with debugging performance
+				issues on live websites.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\model\DBaseModelSearch::getAggregateFields()">
+				Added the app\decibel\model\DBaseModelSearch::getAggregateFields() method to return aggregated field
+				data from model searches.
+			</change>
+		</release>
+		<release version="6.5.0">
+			<change audience="developer" type="feature">Rewrote the shared memory caching system to employ an
+				invalidation technique instead of direct key removal. This allows much quicker clearing of cache
+				segments and is less prone to errors.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\model\DModelSearch::filterByLinkedField()">
+				Model searches can now filter based on the value of a field in a model linked to the searched model.
+			</change>
+			<change audience="developer" type="feature">Added the Application Mode health check.</change>
+		</release>
+		<release version="6.5.1">
+			<change audience="developer" type="feature" api="app\decibel\debug\DException::regenerateBacktrace()">Added
+				the app\decibel\debug\DException::regenerateBacktrace() function to allow caught exceptions to appear to
+				have been generated in the location they were caught. This is useful to mask private functions from
+				exception messages where this information is not useful for debugging purposes.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\application\DDependencyHealthCheck">The
+				app\decibel\application\DDependencyHealthCheck now confirms that all files in the Decibel installation
+				directory are owned by the correct user.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\asset\DStorageHealthCheck">Added the
+				app\decibel\asset\DStorageHealthCheck to check available storage space.
+			</change>
+		</release>
+		<release version="6.5.2">
+			<change audience="developer" type="feature" api="app\decibel\model\DBaseModelSearch::getField()">Added the
+				app\decibel\model\DBaseModelSearch::getField() to return a non- multi-dimensional array containing the
+				value of one field only.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\model\DAbstractModelInstantiationException">
+				Added the app\decibel\model\DAbstractModelInstantiationException exception to provide a more informative
+				error message when incorrectly instantiating an abstract model.
+			</change>
+		</release>
+		<release version="6.5.2.1">
+			<change bugid="00017" audience="editor">Rich text in a child object is incorrect escaped when edited and
+				re-saved.
+			</change>
+		</release>
+		<release version="6.6.0">
+			<change audience="developer" type="feature" api="app\decibel\model\field\DField">Added stricter validation
+				for field values within the app\decibel\model\field\DField::serialize() method. An
+				app\decibel\model\debug\DInvalidFieldValueException will now be thrown where invalid data is provided.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\model\search\DSortCriteria">Added the
+				app\decibel\model\search\DSortCriteria to allow additional control over sorting results from the
+				app\decibel\model\DBaseModelSearch class.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\test\DTestCase">Moved the
+				app\decibel\test\DTestCase class from the Decibel Toolkit into the framework to allow tighter testing
+				integration in future.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\mail\DEmail">Added the app\decibel\mail\DEmail
+				fluent interface for creating and sending e-mail.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\mail\DMailServer">Added the
+				app\decibel\mail\DMailServer dependency injection container to allow configurable e-mail sending.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\mail\DDebugMailServer">Added the
+				app\decibel\mail\DDebugMailServer mail server to allow easy debugging of mail sending functionality
+				where no SMTP server exists or the developer wishes to ensure that no real mail is sent.
+			</change>
+			<change audience="developer" type="security">Updated minimum recommended PHP version to 5.3.15</change>
+			<change audience="developer" type="security">Fixed potential XSS attack when account confirmation is
+				enabled.
+			</change>
+			<change audience="editor" type="feature">The Ctrl-S shortcut can now be used to save data when editing in
+				the administration console.
+			</change>
+			<change bugid="00018" audience="developer">Unable to generate update packages for custom Apps in some
+				situations.
+			</change>
+			<change bugid="00019" audience="administrator">Can't download packages through the Update screen in Internet
+				Explorer.
+			</change>
+		</release>
+		<release version="6.6.0.1">
+			<change bugid="00015" audience="developer">Session save path is based on owner of the
+				app\decibel\utility\DSession file, not the process owner.
+			</change>
+		</release>
+		<release version="6.6.0.2">
+			<change bugid="00016" audience="developer">Sender is incorrectly interpreted by app\decibel\mail\DEmail in
+				some situations.
+			</change>
+		</release>
+		<release version="6.6.0.3">
+			<change audience="developer" type="feature" api="app\decibel\router\DRpcRouter">Added more meaningful error
+				message when accessing invalid remote procedures in Debug mode.
+			</change>
+		</release>
+		<release version="6.6.1">
+			<change audience="developer" type="feature" api="app\decibel\model\DRecursiveModelSaveException">An
+				exception is now thrown when recursive save actions are detected.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\server\DServer::getHostName()">Added the
+				app\decibel\server\DServer::getHostName() method to retrieve the server's host name.
+			</change>
+		</release>
+		<release version="6.6.1.1">
+			<change bugid="00018" audience="developer">Embedded video breaks W3C compatibility of generated HTML 5
+				pages.
+			</change>
+		</release>
+		<release version="6.6.1.2">
+			<change bugid="00019" audience="developer">PHP mail function used by app\decibel\mail\DDefaultMailServer
+				fails when user's first or last name is a valid e-mail address.
+			</change>
+			<change bugid="00020" audience="developer">Update process unable to clear cache when run over an SSL
+				connection.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\task\DScheduledTask::canRunInTestMode()">Added
+				the app\decibel\task\DScheduledTask::canRunInTestMode() method to specify whether a scheduled task can
+				be executed in Test mode.
+			</change>
+		</release>
+		<release version="6.6.2">
+			<change audience="developer" type="feature" api="app\decibel\rpc\DRemoteProcedureCall">Added the
+				app\decibel\rpc\DRemoteProcedureCall class to simplify execution of remote procedures on remote Decibel
+				servers.
+			</change>
+		</release>
+		<release version="6.6.3">
+			<change audience="developer" type="feature" api="app\decibel\model\DBaseModelSearch::export()">Added the
+				app\decibel\model\DBaseModelSearch::export() method to allow exporting of model search results to CSV or
+				other formats.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\task\DTaskLog">Added audit logging for
+				scheduled task execution.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\task\DQueue">Added the app\decibel\task\DQueue
+				and app\decibel\task\DQueueableTask classes to allow task queueing.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\database\DQuery">Query execution details are
+				now shown when debugging app\decibel\database\DQuery objects.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\utility\DString::implode()">Added the
+				app\decibel\utility\DString::implode() function for advanced string implosion.
+			</change>
+			<change audience="developer" type="feature">Added database structure diffing for abstract model tables.
+			</change>
+			<change audience="administrator" type="feature">Added the "app\decibel\maintenance-Cache" privilege.
+			</change>
+		</release>
+		<release version="6.6.3.1">
+			<change audience="developer" type="feature" api="app\decibel\rpc\DRemoteProcedureCall::setParameters()">
+				Added the app\decibel\rpc\DRemoteProcedureCall::setParameters() method to allow the assignment of
+				multiple parameters to a remote procedure call.
+			</change>
+		</release>
+		<release version="6.6.4">
+			<change audience="developer" type="feature" api="app\decibel\process\DShell">Added the
+				app\decibel\process\DShell class to simplify execution of shell processes.
+			</change>
+			<change audience="developer" type="performance" api="app\decibel\model\DBaseModelSearch::search()">
+				Significantly improved the performance model searches that sort by or return values for fields of type
+				app\decibel\model\field\DLinkedObjectField.
+			</change>
+			<change audience="developer" type="change">Database caching is now disabled by default on new
+				installations.
+			</change>
+			<change audience="administrator" type="feature">The IP Address Manager can bnow be used to define known and
+				secure IP addresses, as well as to block IP addresses from accessing Decibel.
+			</change>
+			<change audience="administrator" type="feature">Saving login sessions using browser cookies is now supported
+				by the default Decibel authentication functionality.
+			</change>
+		</release>
+		<release version="6.6.4.1">
+			<change audience="developer" type="feature" api="app\decibel\process\DShell::setTimeout()">Added the
+				app\decibel\process\DShell::setTimeout() method to allow timing out of executed processes.
+			</change>
+		</release>
+		<release version="6.6.4.2">
+			<change audience="developer" type="change">The installer now tests that Apache mod_rewrite is enabled.
+			</change>
+		</release>
+		<release version="6.6.5">
+			<change audience="developer" type="change">App code is now tested for against Decibel quality standards
+				before package generation.
+			</change>
+		</release>
+		<release version="6.6.5.1">
+			<change audience="administrator" type="feature">Added the DECIBEL_CORE_SESSIONDOMAIN configuration option
+				allowing configuration of the domain on which the session cookie will be set for this installation.
+			</change>
+			<change audience="administrator" type="feature">Added the status field to the app\decibel\authorise\DUser
+				model to provide a readable description of a user's account status.
+			</change>
+		</release>
+		<release version="6.6.5.2">
+			<change audience="developer" type="feature">An instance of the app\decibel\application\DConfigurationManager
+				class is now exposed to all views in the variable {$configurationManager}
+			</change>
+		</release>
+		<release version="6.6.5.3">
+			<change bugid="00021" audience="administrator">A division by zero error is produced by
+				app\decibel\utility\DPagination::__construct() where the $pageSize parameter is invalid.
+			</change>
+		</release>
+		<release version="6.6.5.4">
+			<change bugid="00022" audience="administrator">Theme cache must be manually cleared after some updates to
+				re-generate modified views.
+			</change>
+		</release>
+		<release version="6.6.5.5">
+			<change audience="administrator" type="security">A HTTP 406 response is now generated by
+				app\decibel\http\request\DRequest on the detection of cross-site scripting attacks.
+			</change>
+			<change bugid="00023" audience="administrator">Some tasks do not execute when scheduled.</change>
+		</release>
+		<release version="6.6.5.6">
+			<change bug="00024" audience="administrator">Custom fields assigned to abstract models are not updated in
+				the database.
+			</change>
+		</release>
+		<release version="6.6.5.7">
+			<change bug="00025" audience="developer">A warning error is triggered by
+				app\decibel\rpc\DRemoteProcedure::authorise() if null is passed as the second parameter.
+			</change>
+		</release>
+		<release version="6.6.5.8">
+			<change bug="00027" audience="developer">The internal available languages cache is not cleared for models
+				when available languages are changed.
+			</change>
+		</release>
+		<release version="6.6.5.9">
+			<change audience="developer" type="change">Added an initial PHP minimum version to the installer.</change>
+			<change bug="00028" audience="developer">Unable to sort using the string value of an
+				app\decibel\model\field\DLinkedObjectField within an app\decibel\model\DModelSearch.
+			</change>
+		</release>
+		<release version="6.6.5.10">
+			<change bug="00029" audience="developer">Unable to save app\decibel\model\DChild objects when edited through
+				the administration interface.
+			</change>
+		</release>
+		<release version="6.6.6">
+			<change audience="developer" type="feature" api="app\decibel\model\field\DField::isInherited()">Added the
+				app\decibel\model\field\DField::isInherited() method to determine if a field has been inherited from a
+				parent model.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\ssl">Added the app\decibel\ssl namespace
+				including classes to generate public/private key pairs and certificate signing requests.
+			</change>
+			<change audience="developer" type="change" api="app\decibel\model\DBaseModel::mergeRequestData()">Values
+				provided for read-only fields are now ignored by app\decibel\model\DBaseModel::mergeRequestData().
+			</change>
+			<change audience="developer" type="change">It is now no longer required to provide an edit template for
+				models.
+			</change>
+			<change audience="administrator" type="feature">Added the DECIBEL_CORE_BLOCKIPS configuration option to
+				determine whether Decibel should check for IP addresses marked as blocked in the IP Address Manager.
+			</change>
+			<change audience="administrator" type="change">The task scheduler health check now identifies individual
+				scheduled tasks that have not executed on schdule.
+			</change>
+			<change audience="user" type="performance">Improved performance of cached page loads for guest users.
+			</change>
+			<change bug="00030" audience="developer">Read-only parameters are overriden by
+				app\decibel\model\DBaseModel::mergeRequestData()
+			</change>
+		</release>
+		<release version="6.6.6.1">
+			<change bug="00031" audience="developer">Domain names containing a space before a dot (.) are incorrectly
+				validated by app\decibel\validator\DUrlValidator
+			</change>
+		</release>
+		<release version="6.6.6.2">
+			<change bug="00032" audience="administrator">Incorrect mime types are used for some font formats.</change>
+		</release>
+		<release version="6.6.6.3">
+			<change bug="00033" audience="administrator">Saved login cookie created irrespective of authorisation
+				settings in some situations.
+			</change>
+		</release>
+		<release version="6.6.6.4">
+			<change bug="00034" audience="developer">Deprecated method app\decibel\email\DEmail::send() throws an error
+				when providing file attachments.
+			</change>
+		</release>
+		<release version="6.6.6.5">
+			<change bug="00035" audience="developer">Validation of domains by app\decibel\validator\DUrlValidator does
+				not support UTF-8 alpha-numeric characeters.
+			</change>
+		</release>
+		<release version="6.6.7">
+			<change audience="developer" type="feature" api="app\decibel\debug\DException">Added the ability to define
+				messages for exceptions as multi-lingual labels.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\model\search\DChildFieldCondition">Added the
+				app\decibel\model\search\DChildFieldCondition search type to allow searching on fields within child
+				objects of an object.
+			</change>
+		</release>
+		<release version="6.6.7.1">
+			<change bug="00036" audience="administrator">Usage history does not correctly report user information where
+				the user has been deleted.
+			</change>
+		</release>
+		<release version="6.6.7.2">
+			<change bug="00037" audience="developer">Decibel attempts to set cookie headers when running on CLI if saved
+				logins are enabled.
+			</change>
+		</release>
+		<release version="6.6.7.3">
+			<change bug="00038" audience="administrator">Attachments on e-mails sent be app\decibel\mail\DEmail cannot
+				be viewed on Microsoft Outlook email clients if the filename contains UTF-8 characters.
+			</change>
+		</release>
+		<release version="6.6.7.4">
+			<change bug="00039" audience="developer">Exceptions thrown during remote procedure execution when in debug
+				mode are not returned in JSON encoded format.
+			</change>
+		</release>
+		<release version="6.6.7.5">
+			<change bug="00040" audience="administrator">Data export from administration screens fails without warning
+				if maximum field count is exceeded.
+			</change>
+		</release>
+		<release version="6.6.7.6">
+			<change bug="00041" audience="developer">The return contract of app\decibel\model\DBaseModelSearch::get*()
+				methods is broken when a app\decibel\utility\DPagnation object is returned as ArrayAccess is not
+				implemented.
+			</change>
+		</release>
+		<release version="6.6.8">
+			<change audience="developer" type="feature" api="app\decibel\model\DBaseModelSearch::enableCaching()">Added
+				the app\decibel\model\DBaseModelSearch::enableCaching() method to allow control over whether model
+				search results will be cached.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\model\DBaseModelSearch::includeField()">Added
+				the $returnType parameter to the app\decibel\model\DBaseModelSearch::includeField() method allowing
+				control over individual field return types.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\model\DBaseModelSearch::includeField()">Added
+				the $alias parameter to the app\decibel\model\DBaseModelSearch::includeField() method allowing aliasing
+				of returned fields.
+			</change>
+			<change audience="developer" type="feature"
+					api="app\decibel\model\DBaseModelSearch::includeAggregateField()">Added the
+				app\decibel\model\DBaseModelSearch::includeAggregateField() method allowing field values to be returned
+				following the application of SQL aggregate functions.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\model\DBaseModelSearch::includeLinkedField()">
+				Added the app\decibel\model\DBaseModelSearch::includeLinkedField() method allowing fields from linked
+				objects to be returned in model search results.
+			</change>
+			<change audience="developer" type="feature">The cyclomatic complexity of methods within custom Apps is now
+				tested upon package generation and highly complex methods flagged for improvement.
+			</change>
+			<change audience="developer" type="feature">Added the DECIBEL_UPDATE_BLOCKWAITTIME and
+				DECIBEL_UPDATE_BLOCKMESSAGE configuration options to allow customisation of the update block.
+			</change>
+			<change audience="developer" type="performance" api="app\decibel\model\DBaseModelSearch">Improved JOIN
+				optimisation within app\decibel\model\DBaseModelSearch.
+			</change>
+		</release>
+		<release version="6.6.8.1">
+			<change bug="00042" audience="developer">Assigning a app\decibel\model\DLightModel to a
+				app\decibel\model\field\DLinkedObjectField triggers a
+				app\decibel\model\debug\DInvalidFieldValueException when serializing data in strict mode.
+			</change>
+		</release>
+		<release version="6.6.8.2">
+			<change bug="00043" audience="developer">Debugging a app\decibel\controller\DPath object can result in an
+				out of memory error in some scenarios.
+			</change>
+		</release>
+		<release version="6.6.9">
+			<change audience="developer" type="feature" api="app\decibel\hosting\DWebServer">Added the
+				app\decibel\hosting\DWebServer dependency injection container to allow support of additional HTTP
+				servers.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\hosting\DNginx">Added support for running
+				Decibel through NGINX through the app\decibel\hosting\DNginx class.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\utility\DSession::isNewSession()">Added the
+				app\decibel\utility\DSession::isNewSession() method to check whether the current request is the first
+				request in a session.
+			</change>
+		</release>
+		<release version="6.6.9.1">
+			<change bug="00044" audience="developer">Joins are incorrectly ordered when performing some linked field
+				searches on app\decibel\audit\DAuditRecord models.
+			</change>
+		</release>
+		<release version="6.6.9.2">
+			<change bug="00045" audience="administrator">Unqiue index validation can fail when data from a model that
+				has been uninstalled remains present in the database.
+			</change>
+		</release>
+		<release version="6.6.10">
+			<change audience="developer" type="feature" api="app\decibel\model\DBaseModelSearch::sortByLinkedField()">
+				Added the app\decibel\model\DBaseModelSearch::sortByLinkedField() method allowing results to be sorted
+				based on the value of fields within linked objects.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\model\DBaseModelSearch::addSortCriteria()">
+				Added the app\decibel\model\DBaseModelSearch::addSortCriteria() method to allow the application of any
+				custom search criteria to a model search.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\process\DShell::processOutput()">Added the
+				app\decibel\process\DShell::processOutput() to allow execution of one or more callback functions on the
+				output of a shell command.
+			</change>
+		</release>
+		<release version="6.6.11">
+			<change audience="developer" type="feature">Debugged SQL queries are now formatted.</change>
+			<change audience="administrator" type="feature">Added the Forbidden Request Audit Log to track requests
+				blocked by the WAF, such as cross-site scripting attacks.
+			</change>
+			<change bug="00046" audience="developer">Debug Console does not show if Production Mode is changed to Debug
+				Mode during application execution.
+			</change>
+		</release>
+		<release version="6.6.12">
+			<change audience="administrator" type="feature">Scheduled tasks are now automatically cancelled and
+				rescheduled if the parent cron process fails.
+			</change>
+			<change bug="00047" audience="developer">app\decibel\process::findPidWindows() writes to stderr when the
+				requested process ID does not exist.
+			</change>
+		</release>
+		<release version="6.6.12.1">
+			<change bug="00047" audience="developer">app\decibel\process::findPidWindows() writes to stderr when the
+				requested process ID does not exist.
+			</change>
+		</release>
+		<release version="6.6.12.2">
+			<change audience="administrator" type="change">Removed app\decibel\authorise\DGuestUser-Edit privilege as
+				this model cannot be modified.
+			</change>
+		</release>
+		<release version="6.6.12.3">
+			<change audience="developer" type="change">An HTTP 500 status code is now returned on ocurrence of a PHP
+				fatal error.
+			</change>
+			<change audience="developer" type="change">OPTIONS requests are now allowed by default in the generated
+				.nginx configuration.
+			</change>
+		</release>
+		<release version="6.6.12.4">
+			<change audience="developer" type="change">Field identifiers can now begin with a numeric character.
+			</change>
+			<change bug="00048" audience="developer">Joins added to a model search by search conditions are not removed
+				when cloning the search.
+			</change>
+		</release>
+		<release version="6.6.12.5">
+			<change bug="00049" audience="developer">Sites with forced HTTPS use HTTP links in navigations.</change>
+		</release>
+		<release version="6.6.12.6">
+			<change bug="00050" audience="developer">Values for some fields are not correctly cast when retrieved from
+				the database.
+			</change>
+		</release>
+		<release version="6.6.12.7">
+			<change bug="00051" audience="developer">Current language is not persisted to remote procedures when no
+				session has been started.
+			</change>
+		</release>
+		<release version="6.6.12.8">
+			<change bug="00052" audience="editor">Unable to set a linked field to empty once a value has been
+				selected.
+			</change>
+			<change bug="00053" audience="editor">Default values for auto-complete fields are cleared on loading of the
+				edit screen in some browsers.
+			</change>
+		</release>
+		<release version="6.6.12.9">
+			<change bug="00054" audience="administrator">A app\decibel\file\DFileExistsException can be thrown is two
+				processes access an uncached theme resource at the same instant.
+			</change>
+		</release>
+		<release version="6.6.12.10">
+			<change bug="00055" audience="editor">Available and default language information is not provided to child
+				objects of when editing a new model instance.
+			</change>
+			<change bug="00057" audience="administrator">The RPC router attempts to request authentication information
+				from the client when a user has attempted to login using an un-confirmed account, even if the RPC is not
+				itself requesting authentication.
+			</change>
+		</release>
+		<release version="6.6.12.11">
+			<change bug="00058" audience="developer">Install script does not work on a server where only mysqli
+				extension is installed and invalid database configuration inputs are applied.
+			</change>
+		</release>
+		<release version="6.6.12.12">
+			<change bug="00059" audience="developer">app\decibel\controller\DPath does not catch
+				app\decibel\model\debug\DInvalidFieldValueException and consider path invalid in this case.
+			</change>
+			<change bug="00060" audience="developer">app\decibel\rpc\DCurlRequest references invalid method
+				app\decibel\rpc\DCurlRequestAuditOptions::getLogSuccessful().
+			</change>
+		</release>
+		<release version="6.6.12.13">
+			<change bug="00061" audience="developer">app\decibel\asset\DSvgDecoder::decode() throws an exception if an
+				invalid source filename is provided.
+			</change>
+			<change bug="00062" audience="editor">Search index records are not removed when searchable content is
+				expired.
+			</change>
+		</release>
+		<release version="6.6.12.14">
+			<change bug="00063" audience="user">User is redirected to default language version of a page when logging in
+				on another language version.
+			</change>
+		</release>
+		<release version="6.6.12.15">
+			<change audience="developer" type="feature" api="app\decibel\http\DSeeOtherRedirect">Added the
+				app\decibel\http\DSeeOtherRedirect to allow triggering of a 303 redirect.
+			</change>
+		</release>
+		<release version="6.6.12.16">
+			<change bug="00064" audience="user">The 'Created' field cannot be included in a model export.</change>
+		</release>
+		<release version="6.7.0">
+			<change audience="developer" type="feature" api="app\decibel\authorise\event\DOnPasswordChange">Added the
+				app\decibel\authorise\event\DOnPasswordChange event.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\http\DHttpResponse">Added the
+				app\decibel\http\DHttpResponse class and child classes which allow HTTP responses (such as errors and
+				redirects) to be thrown and potentially caught by calling methods.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\rpc\DCurlRequest::setConnectTimeout()">Added
+				the app\decibel\rpc\DCurlRequest::setConnectTimeout() method to allow modification of the connection
+				timeout on a cURL request.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\rpc\DRequest::isHttpsAvailable()">Added the
+				app\decibel\rpc\DRequest::isHttpsAvailable() method to confirm if this request could be served over the
+				HTTPS protocol.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\router\DOnHttpResponse">Added the
+				app\decibel\router\DOnHttpResponse event which is triggered by the
+				app\decibel\router\DRouterEventDispatcher before an HTTP response is sent to the client.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\ssl\DCertificateGetter">Added the
+				app\decibel\ssl\DCertificateGetter class to retrieve SSL certificates from a host.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\stream\DStream">Added the
+				app\decibel\stream\DStream class to provide stream read and write functionality.
+			</change>
+			<change audience="developer" type="feature" api="app\decibel\decorator\DDecorator">Added the
+				app\decibel\decorator\DDecorator class to provide a generic implementation of the Decorator pattern.
+			</change>
+			<change audience="developer" type="change" api="app\decibel\rpc\DCurlRequest">Changed the default connection
+				timeout to 2 seconds for cURL requests.
+			</change>
+			<change audience="developer" type="change">Improved the HTTP response debug message to indicate the source
+				of the response.
+			</change>
+			<change audience="developer" type="change">Dropped support for the PHP mysql extension. The mysqli extension
+				is now required.
+			</change>
+			<change audience="developer" type="change">Improved output of the debug() function.</change>
+			<change bug="00065" audience="developer">Fatal error triggered when
+				app\decibel\model\DBaseModelSearch::getFields() is executed on a model with one or more fields of type
+				app\decibel\model\field\DChildObjectsField.
+			</change>
+		</release>
+		<release version="6.7.0.1">
+			<change bug="00066" audience="developer">Remote procedure router does not correctly handle redirects issued
+				to the front end.
+			</change>
+		</release>
+		<release version="6.7.0.2">
+			<change bug="00068" audience="developer">Extraneous joins are added to app\decibel\model\DBaseModelSearch
+				generated SQL when one or more app\decibel\model\field\DOneToManyRelationalField conditions are added.
+			</change>
+		</release>
+		<release version="6.7.0.3">
+			<change bug="00069" audience="administrator">Hierarchical group names do not include parent group name.
+			</change>
+		</release>
+		<release version="6.7.1">
+			<change audience="developer" type="performance">General performance improvements.</change>
+			<change audience="developer" type="performance">Refactored the application bootstrap to improve load speed
+				and memory usage.
+			</change>
+			<change audience="administrator" type="security">Added CSRF tokens to the default login and password change
+				and reset forms.
+			</change>
+			<change bug="00070" audience="administrator">SVG image support is not enabled by default.</change>
+		</release>
+	</changelog>
+
+</manifest>

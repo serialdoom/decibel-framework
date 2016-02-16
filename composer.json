@@ -1,0 +1,47 @@
+{
+  "name": "decibel/decibel",
+  "type": "decibel-app",
+  "description": "The Decibel Core Framework Application",
+  "keywords": [
+    "decibel",
+    "framework"
+  ],
+  "license": "MIT",
+  "support": {
+    "source": "https://github.com/decibel/framework"
+  },
+  "authors": [
+    {
+      "name": "Timothy de Paris",
+      "email": "tdeparis@thedecibelgroup.com"
+    },
+    {
+      "name": "Alex van Andel",
+      "email": "avanandel@decibeltechnology.com"
+    },
+    {
+      "name": "Decibel Technology",
+      "email": "team@decibeltechnology.com"
+    }
+  ],
+  "require": {
+    "psr/http-message": "~1.0",
+    "php": ">=5.5"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.8.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "app\\decibel\\": "."
+    },
+    "files": [
+      "helpers.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "tests\\app\\decibel\\": "_test/"
+    }
+  }
+}

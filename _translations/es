@@ -1,0 +1,82 @@
+app\decibel-yes = Si
+app\decibel-no = No
+
+app\decibel-added = añadido
+app\decibel-created = creado
+app\decibel-deleted = eliminado
+app\decibel-updated = actualizado
+app\decibel-validated = validado
+
+app\decibel-cancel = Cancelado
+app\decibel-continue = Continuar
+
+app\decibel\auditing\DAuditRecord-created = Creado
+app\decibel\auditing\DAuditRecord-createdBy = Creado Por
+
+app\decibel\application\DConfigurationManager-configuration = Configuración
+app\decibel\application\DConfigurationManager-debugMode = Modo de Depurar
+app\decibel\application\DConfigurationManager-productionMode = Modo de Producción
+app\decibel\application\DConfigurationManager-testMode = Modo de Prueba
+
+app\decibel\application\DApp-app = Programa Adicional
+app\decibel\application\DApp-uninstalled = desinstalado
+
+app\decibel\application\DAppManager-environment = Entorno
+
+app\decibel\auditing\DAuditRecord-created = Creado
+app\decibel\auditing\DAuditRecord-createdBy = Creado Por
+app\decibel\auditing\DAuditRecord-id = ID
+app\decibel\auditing\DAuditRecord-retentionPeriod = Período de Retención
+app\decibel\auditing\DAuditRecord-retentionPeriodDescription = <p>The period of time after which this type of audit record will be automatically purged.</p>
+
+app\decibel\authorise-confirmPassword = Confirmar Contraseña
+app\decibel\authorise-cookieAcceptance = I agree that cookies will be stored by my browser to enable this login and manage my preferences.
+app\decibel\authorise-currentPassword = Contraseña Actual
+app\decibel\authorise-newPassword = Nueva Contraseña
+app\decibel\authorise-password = Contraseña
+app\decibel\authorise-username = Correo Electrónico
+
+app\decibel\authorise\DPrivilege-privilege = Privilegio
+
+app\decibel\model\DModel-changeHistory = Historia de Modificaciones
+app\decibel\model\DModel-changeHistoryRecord = {#time#} por {#user#}
+app\decibel\model\DModel-changeHistoryDescription = <p>La siguente informacion muestra las modificaciones que se han hecho.</p>
+app\decibel\model\DModel-created = Creado
+app\decibel\model\DModel-createdDescription = <p>La fecha y la hora en que se creó esta {#displayName#}.</p>
+app\decibel\model\DModel-createdBy = Creado Por
+app\decibel\model\DModel-lastUpdated = Ultima Modificacion
+app\decibel\model\DModel-lastUpdatedBy = Ultima Modificacion Por
+app\decibel\model\DModel-links = Conexiones
+app\decibel\model\DModel-linksDescription = <p>The following objects have been linked to this {#displayName#}.<br /><strong>Note</strong>: You will not be able to delete this {#displayName#} if any links exist.</p>
+app\decibel\model\DModel-linksLimit = <p><strong>Note</strong> Only the first 10 links are shown, but there are more.</p>
+app\decibel\model\DModel-linksNone = No hay conexiones.
+app\decibel\model\DModel-name = Nombre
+app\decibel\model\DModel-references = Referencias
+app\decibel\model\DModel-referencesDescription = <p>The following objects have referenced this {#displayName#}.<br /><strong>Note</strong>: References will be removed automatically if this {#displayName#} is deleted.</p>
+app\decibel\model\DModel-referencesLimit = <p><strong>Note</strong> Only the first 10 references are shown, but there are more.</p>
+app\decibel\model\DModel-referencesNone = No hay referencias.
+app\decibel\model\DModel-usage = Uso
+
+app\decibel\security\DCustomSecurityPolicy-description = Permite la personalización completa de la política de seguridad utilizada por Decibel.
+app\decibel\security\DCustomSecurityPolicy-name = Personalizado
+
+app\decibel\security\DDefaultSecurityPolicy-description = La politica predeterminada de seguridad de Decibel protege la seguridad del sitio web y minimiza las advertencias de baja prioridad generadas por las pruebas de penetración.
+app\decibel\security\DDefaultSecurityPolicy-name = Predeterminado
+
+app\decibel\security\DPciSecurityPolicy-description = Esta política se aplica a los atributos mínimos de seguridad requeridos para que un sitio web pueda satisfacer el cumplimiento de PCI DSS. Tenga en cuenta que esta opción no garantiza el cumplimiento de PCI DSS del sitio web, por que muchos otros factores también están involucrados.
+app\decibel\security\DPciSecurityPolicy-name = PCI&nbsp;DSS
+
+app\decibel\security\DSecurityPolicy-securityPolicy = Política de Seguridad
+app\decibel\security\DSecurityPolicy-passwordTest = Password test
+app\decibel\security\DSecurityPolicy-passed = aprobado
+app\decibel\security\DSecurityPolicy-highPasswordStrengthError = At least one non-alpha-numeric character must be included in the password (e.g. £, % or *)
+app\decibel\security\DSecurityPolicy-mediumPasswordStrengthError = At least one alphabetic and one numeric character must be included in the password.
+
+app\decibel\task\DScheduledTask-rescheduled = reprogramado
+
+app\decibel\task\DTask-cancelled = cancelado
+app\decibel\task\DTask-task = Evento
+app\decibel\task\DTask-tasks = Eventos
+app\decibel\task\DTask-triggered = provocado
+
+app\decibel\widget\DTextField-charactersRemaining = <span class="counter">{#currentCount#}</span> characters remaining

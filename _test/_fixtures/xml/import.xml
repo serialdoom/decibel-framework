@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<models language="fr">
+	<model namespace="tests\app\decibel\model\TestBaseModule" guid="">
+		<fields>
+			<field name="title" type="app\decibel\model\field\DTextField"><![CDATA[Test]]></field>
+		</fields>
+	</model>
+</models>

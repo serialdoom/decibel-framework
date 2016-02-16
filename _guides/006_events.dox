@@ -1,0 +1,616 @@
+<?php
+
+/**
+ * @defgroup events Events
+ *
+ * Classes for triggering and handling system events.
+ */
+
+/**
+ * @defgroup events_rpc Event Remote Procedures
+ * @ingroup events
+ *
+ * Remote procedures used to manage and control events.
+ */
+
+/**
+ * @defgroup events_exceptions Event Exceptions
+ * @ingroup events
+ *
+ * Exceptions relevant to the event management functionality of %Decibel.
+ */
+
+/**
+ * @page events Triggering and Handling Events
+ *
+ * %Decibel uses the Observer pattern for events.
+ *
+ * The Observer pattern (See http://wikipedia.org/wiki/Observer_pattern) defines a Subject
+ * (or Dispatcher) which manages a list of subscribers (or Observers). The dispatcher
+ * is responsible for notifying all subscribed observers upon a change of state.
+ *
+ * In %Decibel, a dispatcher can be created by extending the
+ * {@link app::decibel::event::DEventDispatcher DEventDispatcher} class,
+ * and the dispatcher's events are defined by creating classes that extend
+ * {@link app::decibel::event::DEvent DEvent}. Any PHP callable type can be an observer of an event.
+ * See http://php.net/language.types.callable for further information about the PHP callable type.
+ *
+ * The following sections explain these concepts and their implementation
+ * in %Decibel in further detail:
+ *
+ * - @subpage events_definitions
+ * - @subpage events_dispatchers
+ * - @subpage events_observers
+ * - @subpage events_hierarchy
+ *
+ * In addition to providing the ability to create custom event dispatchers,
+ * a number of standard event dispatchers are available within %Decibel:
+ *
+ * - @subpage events_models
+ * - @subpage events_other
+ */
+
+/**
+ * @page events_definitions Event Definitions
+ *
+ * An event is an instance of a class that extends
+ * {@link app::decibel::event::DEvent DEvent}, for example:
+ *
+ * @code
+ * namespace app\MyApp;
+ *
+ * use app\decibel\event\DEvent;
+ * use app\decibel\model\field\DBooleanField;
+ *
+ * class OnSave extends DEvent {
+ *
+ * 	public function define() {
+ * 		$hasChanged = DBooleanField('hasChanged', 'Has Changed?');
+ * 		$this->addField($hasChanged);
+ * 	}
+ *
+ * 	public static function getDisplayName() {
+ * 		return 'On Save';
+ * 	}
+ *
+ * 	public static function getDescription() {
+ * 		return 'Triggered when data is saved.';
+ * 	}
+ *
+ * }
+ * @endcode
+ *
+ * @section events_definitions_requiredfunctions Required Methods
+ *
+ * Each event class must implement the following methods:
+ *
+ * - <code>{@link app::decibel::event::DEvent::define() DEvent::define()}</code>:
+ *		This method allows the event to define parameters in which information
+ *		can be passed to subscribers. This function should call the
+ *		{@link app::decibel::event::DEvent::addField() DEvent::addField()}
+ *		method with {@link app::decibel::model::field::DField DField} instances
+ *		describing the available fields.
+ * - <code>{@link app::decibel::event::DEvent::getDisplayName() DEvent::getDisplayName()}</code>:
+ *		Returns a human-readable name for the event. This may be a string
+ *		or an instance of a {@link app::decibel::regional::DLabel DLabel} object
+ *		for multi-lingual Apps.
+ * - <code>{@link app::decibel::event::DEvent::getDescription() DEvent::getDescription()}</code>:
+ *		Returns a human-readable description of the event. This may be a string
+ *		or an instance of a {@link app::decibel::regional::DLabel DLabel} object
+ *		for multi-lingual Apps
+ *
+ * @section events_definitions_using Using Events
+ *
+ * The use of {@link app::decibel::event::DEvent DEvent} objects will
+ * be explained in the @ref events_dispatchers and @ref events_observers
+ * sections.
+ */
+
+/**
+ * @page events_dispatchers Event Dispatchers
+ *
+ * An event dispatcher is a class that wishes to advise subscribed observers
+ * about one or more changes of state, or events.
+ *
+ * For a class to be an event dispatcher, it must satisfy the following
+ * conditions:
+ *
+ * - The class (or an ancestor class) must extend {@link app::decibel::event::DEventDispatcher DEventDispatcher}.
+ * - The class must override the {@link app::decibel::event::DEventDispatcher DEventDispatcher::getEvents()}
+ *		and {@link app::decibel::event::DEventDispatcher DEventDispatcher::getDefaultEvent()} functions.
+ *
+ * @warning
+ * If an observer attempts to subscribe to an event dispatcher that does not
+ * override the {@link app::decibel::event::DEventDispatcher DEventDispatcher::getEvents()}
+ * and {@link app::decibel::event::DEventDispatcher DEventDispatcher::getDefaultEvent()} functions,
+ * a {@link app::decibel::debug::DNotImplementedException DNotImplementedException}
+ * will be thrown.
+ *
+ * @section events_dispatchers_definingdispatcher Creating an Event Dispatcher
+ *
+ * Each event dispatcher is capable of notifying subscribers of one or more
+ * events.
+ *
+ * While not required, it is recommended that a constant containing the qualified
+ * name of the event class is defined within the event dispatcher for each
+ * available event, for example:
+ *
+ * @code
+ * namespace app\MyApp;
+ *
+ * use app\decibel\event\DEventDispatcher;
+ *
+ * class MyEventDispatcher extends DEventDispatcher {
+ * 	const ON_SAVE = 'app\\MyApp\\OnSave';
+ * 	const ON_DELETE = 'app\\MyApp\\OnDelete';
+ * }
+ * @endcode
+ *
+ * This allows observers to reference the event using the constant,
+ * such as <code>app\\MyApp\\MyEventDispatcher::ON_SAVE</code>
+ *
+ * The event dispatcher must then override
+ * the {@link app::decibel::event::DEventDispatcher DEventDispatcher::getEvents()} function to define the events
+ * it produces, for example:
+ *
+ * @code
+ * namespace app\MyApp;
+ *
+ * use app\decibel\event\DEventDispatcher;
+ *
+ * class MyEventDispatcher extends DEventDispatcher {
+ * 	const ON_SAVE = 'app\\MyApp\\OnSave';
+ * 	const ON_DELETE = 'app\\MyApp\\OnDelete';
+ *
+ * 	public static function getEvents() {
+ * 		return array(
+ * 			self::ON_SAVE,
+ * 			self::ON_DELETE,
+ * 		);
+ * 	}
+ * }
+ * @endcode
+ *
+ * Finally, each event dispatcher has a default event. This is the event that
+ * an observer will be notified of if they don't specify a particular event
+ * when subscribing. The default event is specified by overriding
+ * the {@link app::decibel::event::DEventDispatcher DEventDispatcher::getDefaultEvent()} function, for example:
+ *
+ * @code
+ * namespace app\MyApp;
+ *
+ * use app\decibel\event\DEventDispatcher;
+ *
+ * class MyEventDispatcher extends DEventDispatcher {
+ * 	const ON_SAVE = 'app\\MyApp\\OnSave';
+ * 	const ON_DELETE = 'app\\MyApp\\OnDelete';
+ *
+ * 	public static function getDefaultEvent() {
+ * 		return self::ON_SAVE;
+ * 	}
+ *
+ * 	public static function getEvents() {
+ * 		return array(
+ * 			self::ON_SAVE,
+ * 			self::ON_DELETE,
+ * 		);
+ * 	}
+ * }
+ * @endcode
+ *
+ * @section events_dispatchers_triggering Triggering Events
+ *
+ * An event dispatcher must use the {@link app::decibel::event::DEventDispatcher DEventDispatcher::notifyObservers()}
+ * function to trigger events as appropriate, for example:
+ *
+ * @code
+ * namespace app\MyApp;
+ *
+ * use app\decibel\event\DEventDispatcher;
+ *
+ * class MyEventDispatcher extends DEventDispatcher {
+ * 	const ON_SAVE = 'app\\MyApp\\OnSave';
+ * 	const ON_DELETE = 'app\\MyApp\\OnDelete';
+ *
+ * 	public static function getDefaultEvent() {
+ * 		return self::ON_SAVE;
+ * 	}
+ *
+ * 	public static function getEvents() {
+ * 		return array(
+ * 			self::ON_SAVE,
+ * 			self::ON_DELETE,
+ * 		);
+ * 	}
+ *
+ * 	public function save() {
+ * 		$result = $this->notifyObservers(self::ON_SAVE);
+ *  }
+ * }
+ * @endcode
+ *
+ * This function returns a {@link app::decibel::utility::DResult DResult} object
+ * which contains cumulative feedback provided by the observers that were
+ * notified, if any.
+ *
+ * See the @ref events_observers Developer Guide for further information
+ * about subscribing to an event.
+ */
+
+/**
+ * @page events_observers Event Observers
+ *
+ * An event observer is an entity that wishes to be notified about a particular
+ * change of state (or event) that occurs within an event dispatcher.
+ *
+ * In %Decibel, an observer can be any PHP callable
+ * (see http://php.net/language.types.callable), for example:
+ *
+ * @code
+ * // Static class method.
+ * $callable = array('app\\MyApp\\MyClass', 'callback');
+ *
+ * // Class instance method.
+ * $instance = new app\MyApp\MyClass();
+ * $callable = array($instance, 'callback');
+ *
+ * // Closure.
+ * $callable = function() {}
+ * @endcode
+ *
+ * @section events_observers_subscribing Subscribing
+ *
+ * An observer can subscribe to an event by calling
+ * the {@link app::decibel::event::DEventDispatcher DEventDispatcher::subscribeObserver()} function.
+ *
+ * This function accepts two parameters:
+ * -# The PHP callable observer
+ * -# The event to subscribe to. If this parameter is omitted, the observer
+ *		will be subscribe to the default event for the dispatcher.
+ *
+ * The following code subscribes to the <code>app\\MyApp\\MyEventDispatcher::ON_DELETE</code>
+ * event of the <code>app\\MyApp\\MyEventDispatcher</code> event dispatcher:
+ *
+ * @code
+ * namespace app\MyApp;
+ *
+ * MyEventDispatcher::subscribeObserver(
+ * 	array('app\\MyApp\\MyClass', 'callback'),
+ *	MyEventDispatcher::ON_DELETE
+ * );
+ * @endcode
+ *
+ * The following code subscribes to the default event
+ * (<code>app\\MyApp\\MyEventDispatcher::ON_SAVE</code>) of the
+ * <code>app\\MyApp\\MyEventDispatcher</code> event dispatcher
+ * (which is the default event for this dispatcher):
+ *
+ * @code
+ * namespace app\MyApp;
+ *
+ * MyEventDispatcher::subscribeObserver(
+ * 	array('app\\MyApp\\MyClass', 'callback')
+ * );
+ * @endcode
+ *
+ * @subsection events_observers_subscribing_temporary Temporary Subscription
+ *
+ * Temporary subscriptions last only for the current request. These subscriptions
+ * are made by calling the {@link app::decibel::event::DEventDispatcher DEventDispatcher::subscribeObserver()} within
+ * code executed by the current request.
+ *
+ * @subsection events_observers_subscribing_permanent Permanent Subscription
+ *
+ * Permanent subscriptions can be made by calling
+ * the {@link app::decibel::event::DEventDispatcher DEventDispatcher::subscribeObserver()} function
+ * within an @ref app_registrations file.
+ *
+ * @note
+ * This is the recommended way of subscribing to an event, as these
+ * registrations are cached and therefore not called on every page load.
+ *
+ * @section events_observers_unsubscribing Un-subscribing
+ *
+ * An observer can un-subscribe from an event by calling
+ * the {@link app::decibel::event::DEventDispatcher DEventDispatcher::unsubscribeObserver()} function, for example:
+ *
+ * @code
+ * namespace app\MyApp;
+ *
+ * MyEventDispatcher::unsubscribeObserver(
+ * 	array('app\\MyApp\\MyClass', 'callback'),
+ * 	MyEventDispatcher::ON_DELETE
+ * );
+ * @endcode
+ *
+ * @note
+ * If the subscription was made within an @ref app_registrations file,
+ * the un-subscription will only be effective for the current request.
+ *
+ * @section events_observers_parameters Callback Parameters
+ *
+ * Subscribed observers will be passed a single parameter when an event
+ * is triggered:
+ *
+ * -# <code>DEvent $event</code>: The event that was triggered.
+ *
+ * The following code shows an example of a callback function that accepts
+ * this parameter:
+ *
+ * @code
+ * namespace app\MyApp;
+ *
+ * class MyClass {
+ * 	public static function callback(MyEvent $event) {
+ * 		echo 'Event: ' . get_class($event);
+ * 		echo 'Dispatcher: ' . get_class($event->dispatcher);
+ * 	}
+ * }
+ * @endcode
+ *
+ * @note
+ * It is not necessary for a callback function to accept the event parameter.
+ *
+ * @subsection events_observers_parameters_event Event
+ *
+ * The {@link app::decibel::event::DEvent DEvent::$dispatcher} parameter contains
+ * the {@link app::decibel::event::DEventDispatcher DEventDispatcher} instance that
+ * initiated the event.
+ *
+ * An observer may stop propagation of the event to further observers by calling
+ * the {@link app::decibel::event::DEvent DEvent::stopPropagation()} function.
+ *
+ * @section events_observers_return Callback Return Value
+ *
+ * Observers may provide feedback to the event dispatcher by returning
+ * a {@link app::decibel::utility::DResult DResult} object. Feedback from
+ * observers is accumulated and returned to the dispatcher
+ * by the {@link app::decibel::event::DEventDispatcher DEventDispatcher::notifyObservers()}
+ * function, for example:
+ *
+ * @code
+ * namespace app\MyApp;
+ *
+ * use app\decibel\utility\DResult;
+ *
+ * class MyClass {
+ * 	public static function callback(MyEvent $event) {
+ * 		return new DResult(
+ * 			DResult::TYPE_ERROR,
+ * 			'Unable to process event'
+ * 		);
+ * 	}
+ * }
+ * @endcode
+ */
+
+/**
+ * @page events_hierarchy Event Hierarchy
+ *
+ * Event notifications always follow the inheritance hierarchy
+ * for an event dispatcher. This means that if an event dispatcher
+ * extends another event dispatcher, notifications will chain up through
+ * the inheritance hierarchy.
+ *
+ * @code
+ * namespace app\MyApp;
+ *
+ * use app\decibel\event\DEventDispatcher;
+ *
+ * class MyDispatcherA extends DEventDispatcher {
+ *	const ON_SAVE = 'save';
+ * 	...
+ * }
+ *
+ * class MyDispatcherB extends MyDispatcherA {
+ * 	public function doSomething() {
+ * 		$this->notifySubscribers(MyDispatcherA::ON_SAVE);
+ * 	}
+ * }
+ *
+ * $object = new MyDispatcherB();
+ * $object->doSomething();
+ * @endcode
+ *
+ * In the example above, two "ON_SAVE" event notifications will be issued:
+ *
+ * - <code>app\\MyApp\\MyDispatcherA::ON_SAVE</code>
+ * - <code>app\\MyApp\\MyDispatcherB::ON_SAVE</code>
+ *
+ * Event hierarchy means that an observer will be notified of the event regardless
+ * of which of the dispatchers it has subscribed to. If an object subscribes
+ * to the base class, it will be notified of both events, for example:
+ *
+ * @code
+ * namespace app\MyApp;
+ *
+ * class MyClass {
+ * 	public static function callbackA() {
+ * 	}
+ *
+ * 	public static function callbackB() {
+ * 	}
+ * }
+ *
+ * MyDispatcherA::subscribeObserver(
+ * 	array('app\\MyApp\\MyClass', 'callbackA'),
+ * 	MyDispatcherA::ON_SAVE
+ * );
+ *
+ * MyDispatcherB::subscribeObserver(
+ * 	array('app\\MyApp\\MyClass', 'callbackB'),
+ * 	MyDispatcherB::ON_SAVE
+ * );
+ *
+ * // This will trigger app\MyApp\MyClass::callbackA() only
+ * $objectA = new MyDispatcherA();
+ * $objectA->doSomething();
+ *
+ * // This will trigger app\MyApp\MyClass::callbackA()
+ * // and app\MyApp\MyClass::callbackB()
+ * $objectB = new MyDispatcherB();
+ * $objectB->doSomething();
+ * @endcode
+ */
+
+/**
+ * @page events_models Model Events
+ *
+ * The {@link app::decibel::model::DBaseModel DBaseModel} class is an event
+ * dispatcher that allows all model instances to notify observers upon a range
+ * of events.
+ *
+ * @note
+ * Model events can also be handled internally within a model without the need
+ * to subscribe. See @ref model_events in the @ref model developer guide
+ * for further details.
+ *
+ * @section events_models_standard Model Action Events
+ *
+ * - {@link app::decibel::model::event::DOnBeforeDelete DOnBeforeDelete}:
+ *		Triggered before a model instance is deleted. If an observer returns
+ *		a non-successful {@link app::decibel::utility::DResult DResult} object,
+ *		deletion of the model will not proceeed.
+ * - {@link app::decibel::model::event::DOnBeforeFirstSave DOnBeforeFirstSave}:
+ *		Triggered before a model instance is saved for the first time.
+ *		If an observer returns a non-successful
+ *		{@link app::decibel::utility::DResult DResult} object,
+ *		saving of the model will not proceeed.
+ * - {@link app::decibel::model::event::DOnBeforeLoad DOnBeforeLoad}:
+ *		Triggered before a model instance is loaded from the database.
+ * - {@link app::decibel::model::event::DOnBeforeSave DOnBeforeSave}:
+ *		Triggered before a model instance is saved. If an observer returns
+ *		a non-successful {@link app::decibel::utility::DResult DResult} object,
+ *		saving of the model will not proceeed.
+ * - {@link app::decibel::model::event::DOnDelete DOnDelete}:
+ *		Triggered when a model instance is deleted.
+ * - {@link app::decibel::model::event::DOnFirstSave DOnFirstSave}:
+ *		Triggered when a model instance is saved for the first time.
+ * - {@link app::decibel::model::event::DOnLoad DOnLoad}:
+ *		Triggered when a model instance is loaded from the database.
+ * - {@link app::decibel::model::event::DOnSave DOnSave}:
+ *		Triggered when a model instance is saved.
+ *
+ * @section events_models_caching Caching Events
+ *
+ * - {@link app::decibel::model::event::DOnUncache DOnUncache}:
+ *		Triggered when a model is cleared from the cache. This occurs when
+ *		a model is saved or deleted.
+ *
+ * @subsection events_models_caching_examples Examples
+ *
+ * The following code shows an observer binding to the
+ * {@link app::decibel::model::event::DOnUncache DOnUncache} event
+ * for a custom model class:
+ *
+ * @code
+ * namespace app\MyApp;
+ *
+ * use app\decibel\model\DModel;
+ *
+ * class MyClass {
+ * 	public static function callback(MyModel $model) {
+ * 		echo "Removed model instance '{$model->name}' from the cache";
+ * 	}
+ * }
+ *
+ * MyModel::subscribeObserver(
+ * 	array('app\\MyApp\\MyClass', 'callback'),
+ * 	DModel::ON_UNCACHE
+ * );
+ *
+ * $instance = MyModel::create();
+ * $instance->name = 'test';
+ * $instance->save();
+ * @endcode
+ *
+ * This will output the following:
+ *
+ * <code>Removed model instance 'test' from the cache</code>
+ *
+ * @section events_models_user User Events
+ *
+ * - {@link app::decibel::authorise::event::DOnUserFirstLogin DOnUserFirstLogin}:
+ *		Triggered when a user logs in for the first time.
+ * - {@link app::decibel::authorise::event::DOnUserLogin DOnUserLogin}:
+ *		Triggered when a user logs in.
+ * - {@link app::decibel::authorise::event::DOnUserLogout DOnUserLogout}:
+ *		Triggered when a user logs out.
+ *
+ * @subsection events_models_caching_examples Examples
+ *
+ * The following code shows an observer binding to the
+ * {@link app::decibel::authorise::event::DOnUserFirstLogin DOnUserFirstLogin} event:
+ *
+ * @code
+ * namespace app\MyApp;
+ *
+ * use app\decibel\authorise\DUser;
+ *
+ * class MyClass {
+ * 	public static function callback(DUser $user) {
+ * 		echo "User '{$user->getFieldValue(DUser::FIELD_USERNAME)}' just logged in for the first time!";
+ * 	}
+ * }
+ *
+ * DUser::subscribeObserver(
+ * 	array('app\\MyApp\\MyClass', 'callback'),
+ * 	DUser::ON_FIRST_LOGIN
+ * );
+ * @endcode
+ *
+ * This will output the following upon the first login of the user
+ * with the username 'editor@@mywebsite.com':
+ *
+ * <code>User 'editor@@mywebsite.com' just logged in for the first time!</code>
+ *
+ * @section events_models_hierarchy Model Event Hierarchy
+ *
+ * Like all event dispatchers, notifications of model events follow
+ * the inheritance hierarchy of the model instance. This means that if a model
+ * extends another model, notifications will be issued for both levels
+ * of the inheritance hierarchy.
+ *
+ * @code
+ * namespace app\MyApp;
+ *
+ * use app\decibel\model\DBaseModel;
+ *
+ * class MyModelA extends DBaseModel {
+ * 	...
+ * }
+ *
+ * class MyModelB extends MyModelA {
+ * 	...
+ * }
+ *
+ * $instance = MyModelB::create();
+ * $instance->save();
+ * @endcode
+ *
+ * In the example above, three "ON_SAVE" event notifications will be issued:
+ *
+ * - <code>app\\decibel\\model\\DBaseModel::ON_SAVE</code>
+ * - <code>app\\MyApp\\MyClassA::ON_SAVE</code>
+ * - <code>app\\MyApp\\MyClassB::ON_SAVE</code>
+ *
+ * Event hierarchy means that an observer will be notified of the event regardless
+ * of which of the three classes it has subscribed to. Obviously, if an observer
+ * subscribes to <code>app\\MyApp\\MyClassA::ON_SAVE</code>, it would be notified
+ * whenever an instance of either <code>app\\MyApp\\MyClassA</code>
+ * or <code>app\\MyApp\\MyClassB</code> were saved.
+ *
+ * See @ref events_hierarchy for further details.
+ */
+
+/**
+ * @page events_other Other Events
+ *
+ * There are a range of events that are automatically triggered by %Decibel
+ * in response to actions performed during regular execution. These events
+ * can be bound to by custom Apps to extend or manipulate standard functionality.
+ *
+ * - DProfiler
+ * - DError
+ * - DConfigurationManager
+ */

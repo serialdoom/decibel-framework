@@ -1,0 +1,707 @@
+<?php
+
+/**
+ * @page installation Installation and Configuration
+ *
+ * The information below is details the requirements, configuration and
+ * installation of %Decibel.
+ *
+ * - @subpage configuration_requirements
+ * - @subpage configuration_developmentserver
+ * - @subpage configuration_installation
+ * - @subpage configuration_database
+ * - @subpage toolkit
+ * - @subpage netbeans
+ */
+
+/**
+ * @page	configuration_requirements	Requirements and Dependencies
+ *
+ * %Decibel can be hosted on a server that complies with the following technical
+ * specification. There are no dependencies specific to %Decibel, and the
+ * requirements listed below will usually be found on most web servers.
+ *
+ * Please note that %Decibel is not designed to operate on shared hosting
+ * arrangements. This manual assumes that a dedicated server is being operated.
+ * Further to this, performance configuration information is based on up to four
+ * installations of %Decibel running on a single server. For more information
+ * about performance tuning in alternate situations, see the Performance Tuning
+ * section of this documentation.
+ *
+ * @section requirements_server Hardware Requirements
+ *
+ * Hardware requirements vary for every installation, as they are affected by
+ * traffic levels (throughput and peak traffic levels), the complexity of the
+ * website functionality and data storage requirements.
+ *
+ * The following specification is recommended as a minimum for a production
+ * server running %Decibel:
+ *
+ * <table>
+ *	<tr>
+ *		<th>RAM</th>
+ *		<td>2 GB</td>
+ *	</tr>
+ *	<tr>
+ *		<th>CPU</th>
+ *		<td>2 x 2Ghz+ cores</td>
+ *	</tr>
+ *	<tr>
+ *		<th>HDD</th>
+ *		<td>10 GB</td>
+ *	</tr>
+ * </table>
+ *
+ * @note
+ * Multiple Decibel installations may be run on a single server and the above
+ * specification could support 40 or more small websites running on Decibel.
+ *
+ * @section requirements_apache Web Server (Apache HTTPD or Nginx)
+ *
+ * %Decibel requires the Apache HTTPD or Nginx web server.
+ *
+ * @note
+ * It is also possible to use other web servers, such as Microsoft IIS.
+ * No installation support is provided for alternate configurations.
+ *
+ * @subsection requirements_apache_minimum Configuration Requirements
+ *
+ * <table>
+ *	<tr>
+ *		<th>&nbsp;</th>
+ *		<th>Apache HTTPD</th>
+ *		<th>Nginx</th>
+ *	</tr>
+ *	<tr>
+ *		<th>Version</th>
+ *		<td>2.2 or higher (latest 2.x release is recommended for maximum security)</td>
+ *		<td>1.2 or higher (latest 1.2.x release is recommended for maximum security)</td>
+ *	</tr>
+ *	<tr>
+ *		<th>Required Modules</th>
+ *		<td>
+ *			- <code>mod_rewrite</code>
+ *		</td>
+ *		<td>
+ *			- <code>Core</code>
+ *			- <code>Rewrite</code>
+ *		</td>
+ *	</tr>
+ *	<tr>
+ *		<th>Recommended Modules</th>
+ *		<td>
+ *			- <code>mod_deflate</code>
+ *			- <code>mod_headers</code>
+ *			- <code>mod_expires</code>
+ *			- <code>mod_fcgid</code>
+ *			- <code>mod_ssl</code>
+ *		</td>
+ *		<td>
+ *			- <code>Auth Basic</code>
+ *			- <code>FastCGI</code>
+ *			- <code>Gzip</code>
+ *			- <code>Headers</code>
+ *			- <code>SSL</code>
+ *		</td>
+ *	</tr>
+ *	<tr>
+ *		<th>suEXEC</th>
+ *		<td>If not enabled, the user running apache will require write permissions to the web root folder</td>
+ *		<td>&nbsp;</td>
+ *	</tr>
+ * </table>
+ *
+ * @subsection requirements_apache_additional Further Information
+ *
+ * See http://httpd.apache.org/ and http://wiki.nginx.org/Main for more
+ * information about Apache HTTPD and Nginx respectively.
+ *
+ * @section requirements_php Scripting Language (PHP)
+ *
+ * The PHP scripting language is used by %Decibel.
+ *
+ * @subsection requirements_php_minimum Configuration Requirements
+ *
+ * <table>
+ *	<tr>
+ *		<th>Version</th>
+ *		<td>5.3.6 or higher (5.3.16 is recommended for maximum security)</td>
+ *	</tr>
+ *	<tr>
+ *		<th>Required Extensions</th>
+ *		<td>
+ *			 - <code>curl</code>
+ *			 - <code>json</code>
+ *			 - <code>mbstring</code>
+ *			 - <code>mcrypt</code>
+ *			 - <code>mysqli</code>
+ *			 - <code>openssl</code>
+ *			 - <code>Phar</code>
+ *			 - <code>zip</code>
+ *			 - <code>zlib</code>
+ *		</td>
+ *	</tr>
+ *	<tr>
+ *		<th>Recommended Extensions</th>
+ *		<td>
+ *			 - <code>intl</code>
+ *			 - <code>memcache</code>
+ *		</td>
+ *	</tr>
+ *	<tr>
+ *		<th>Mail</th>
+ *		<td>Enabled</td>
+ *	</tr>
+ *	<tr>
+ *		<th>Sessions</th>
+ *		<td>Enabled</td>
+ *	</tr>
+ * </table>
+ *
+ * @subsection requirements_php_configuration Configuration Options
+ *
+ * The following configuration settings are recommended in addition
+ * to the PHP 5 recommended options for production hosting:
+ *
+ * @code
+ * error_reporting = E_ALL			; This allows Decibel to process
+ *									; and report all errors.
+ *
+ * magic_quotes_gpc = Off			; Decibel does not support magic quotes.
+ * magic_quotes_runtime = Off
+ *
+ * memory_limit = 64M				; The amount of memory required will vary
+ *									; depending on the complexity of the website.
+ *
+ * register_globals = Off			; Registrations are not needed and should
+ *									; be disabled for optimal performance.
+ * register_argc_argv = Off
+ * auto_globals_jit = On
+ *
+ * safe_mode = Off					; Decibel does not support safe mode.
+ *
+ * file_uploads = On				; Allows Decibel to manage media files.
+ *
+ * tidy.clean_output = Off			; Decibel manages validation and cleaning
+ *									; of HTML output internally.
+ *
+ * zlib.output_compression = Off	; This should be disabled to avoid
+ *									; corruption of output.
+ *
+ * phar.readonly = Off				; This is required to enable update
+ *									; backup functionality.
+ *
+ * session.auto_start = Off			; Session auto-start must be disabled for
+ *									; a website to be compliant with European
+ *									; Union Cookie laws.
+ * @endcode
+ *
+ * @note
+ * It is recommended that PHP is running in CGI/FastCGI mode (e.g. php-fcgi)
+ * rather than a module. This in turn ensures that all scripts run as the owner
+ * of the directory (via suEXEC).
+ *
+ * @subsection requirements_php_ssl SSL Configuration
+ *
+ * Open SSL needs to be correctly configured on the server in order to utilise
+ * the SSL certificate generation and secure trust features of Decibel.
+ *
+ * In addition to enabling the openssl PHP module, PHP must be able to locate
+ * the <code>openssl.cnf</code> file.
+ *
+ * @note
+ * When running Decibel under FastCGI on Apache, the following line must
+ * be added to the <code>httpd.conf</code> file:
+ *
+ * @code
+ * FcgidInitialEnv OPENSSL_CONF c:\usr\local\ssl\openssl.cnf
+ * @endcode
+ *
+ * See http://www.php.net/manual/en/openssl.installation.php for further
+ * information about Open SSL configuration.
+ *
+ * @subsection requirements_php_additional Further Information
+ *
+ * See http://www.php.net/ for further information.
+ *
+ * @section requirements_bytecode Byte-code Caching
+ *
+ * It is recommended to install APC, eAccelerator or XCache to enable byte-code
+ * caching. This will increase overall performance of the application.
+ *
+ * @note
+ * Other byte-code caching engines may be used, however %Decibel has not
+ * been tested with these solutions.
+ *
+ * @subsection requirements_bytecode_additional Further Information
+ *
+ * See http://php.net/manual/en/book.apc.php, http://www.eaccelerator.net/
+ * or http://xcache.lighttpd.net/ for further information.
+ *
+ * @section requirements_database Database Server (MySQL)
+ *
+ * %Decibel utilises MySQL as its database server.
+ *
+ * @subsection requirements_database_minimum Configuration Requirements
+ *
+ * <table>
+ *	<tr>
+ *		<th>Version</th>
+ *		<td>5.0.45 or higher</td>
+ *	</tr>
+ *	<tr>
+ *		<th>Connection</th>
+ *		<td>For single-server Linux setups, it is recommended to access MySQL on a UNIX Socket.</td>
+ *	</tr>
+ * </table>
+ *
+ * @subsection requirements_database_configuration Configuration Options
+ *
+ * As a minimum, the below configuration is recommended in addition to the MySQL recommended
+ * options for production hosting:
+ *
+ * @code
+ * join_buffer_size = 1M
+ * key_buffer_size = 64M
+ * long_query_time = 3
+ * open_files_limit = 3072
+ * query_cache_size = 10485760
+ * query_cache_type = 1
+ * table_cache = 2048
+ * thread_cache_size = 4
+ * @endcode
+ *
+ * @note
+ * As all installations have different requirements, it is recommended that the
+ * database server is configured by an experienced MySQL database administrator
+ * to ensure optimal application performance.
+ *
+ * @subsection requirements_database_additional Further Information
+ *
+ * See http://www.mysql.com/ for further information.
+ *
+ * @section requirements_memcache Memory Caching (Memcached)
+ *
+ * %Decibel uses Memcached to store generated content and other information,
+ * reducing load on the database server and increasing response times.
+ *
+ * @note
+ * While %Decibel will function without Memcached, it is not recommended to run
+ * a production site in this manner. It is also possible to utilise other
+ * shared memory caching applications by installing an appropriate App.
+ *
+ * @subsection requirements_memcache_minimum Configuration Requirements
+ *
+ * <table>
+ *	<tr>
+ *		<th>Version</th>
+ *		<td>1.4.4 or higher</td>
+ *	</tr>
+ *	<tr>
+ *		<th>Connection</th>
+ *		<td>For single-server Linux setups, it is recommended to access Memcached on a UNIX Socket.</td>
+ *	</tr>
+ * </table>
+ *
+ * @subsection requirements_memcache_allocation Memory Allocation
+ *
+ * As a guide, the following amount of memory should be allocated to Memcached:
+ *
+ * <table>
+ *	<tr>
+ *		<th>Installation Type</th>
+ *		<th>Memory Allocation</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Small Website (< 100 pages, minimal functionality)</td>
+ *		<td>16 MB</td>
+ *	</tr>
+ *	<tr>
+ *		<td>Medium Website (< 500 pages, moderate functionality)</td>
+ *		<td>32 MB</td>
+ *	</tr>
+ *	<tr>
+ *		<td>Large Website (> 500 pages, moderate functionality)</td>
+ *		<td>64 MB – 128 MB</td>
+ *	</tr>
+ *	<tr>
+ *		<td>Global Website (> 1000 pages, complex functionality)</td>
+ *		<td>128 MB – 256 MB</td>
+ *	</tr>
+ * </table>
+ *
+ * @subsection requirements_memcache_additional Further Information
+ *
+ * See http://www.memcached.org/ for more information.
+ */
+
+/**
+ * @page configuration_developmentserver Development Server
+ *
+ * The following information describes the setup of a local web server suitable
+ * for Decibel development on various operating systems.
+ *
+ * @section configuration_developmentserver_windows Windows
+ *
+ * An installer package is available that will configure all required software
+ * to run a Decibel development environment.
+ *
+ * @subsection configuration_developmentserver_windows_installation Installation
+ *
+ * Download the installer package from
+ * http://code.decibeltechnology.com/server/DecibelDevelopmentServer.msi
+ *
+ * This package installs the following software to a <strong>Decibel</strong>
+ * folder on the main Windows drive (usually C: drive):
+ *
+ * - Apache HTTPD server (v2.4.7), installed as a service
+ *		(<em>Decibel - Apache HTTPD</em>). The server is configured to use PHP
+ *		(v5.4.25) as a FastCGI server, with all Apache modules and PHP extensions
+ *		required to run Decibel enabled.
+ * - Memcached shared memory caching server (v1.4.4), installed as a service
+ *		(<em>Decibel - Memcached</em>).
+ * - MySQL database server (v5.6), installed as a service
+ *		(<em>Decibel - MySQL</em>).
+ *
+ * @note
+ * Administrator permission will be required to complete the installation.
+ *
+ * @subsubsection  configuration_developmentserver_windows_installation_features Feature Selection
+ *
+ * Executing the installer package will begin the standard windows installer
+ * process. Following acceptance of the licence, a choice of server
+ * components will be provided.
+ *
+ * @image html configuration_developmentserver_windows_installation_01.jpg
+ *
+ * @note
+ * If a MySQL server is already available, you may wish to ommit this
+ * component from the installation.
+ *
+ * @subsubsection  configuration_developmentserver_windows_installation_ports Port Selection
+ *
+ * The following screen will allow configuration of ports (at this point
+ * limited to the Memcached server port). Once ports are selected, click
+ * the <em>Test Ports</em> button to test that these ports are available
+ * before continuing the installation process.
+ *
+ * @image html configuration_developmentserver_windows_installation_02.jpg
+ *
+ * @note
+ * Currently the port numbers on which Apache and MySQL run are not configurable
+ * within the installer. These ports will need to be available during the
+ * installation process, so if they are currently in use, existing services
+ * will need to be stopped during installation. If you wish to change these
+ * ports, their respective configuration files will need to be modified after
+ * installation. As the services are installed with unique names, it will be
+ * possible to install the development server alongside an existing development
+ * server.
+ *
+ * @subsubsection  configuration_developmentserver_windows_installation_mysql MySQL Root Password
+ *
+ * If the MySQL server is selected for installation, the following screen
+ * will allow selection of the MySQL root password.
+ *
+ * @image html configuration_developmentserver_windows_installation_03.jpg
+ *
+ * @subsection configuration_developmentserver_windows_services Services
+ *
+ * Once installation has completed, the installed services will be visible
+ * in the Services Management Console:
+ *
+ * @image html configuration_developmentserver_windows_services_01.jpg
+ *
+ * @note
+ * The Services Management Console can be opened by executing the command
+ * <code>services.msc</code> from the Windows Start menu, or a command prompt.
+ *
+ * @subsection configuration_developmentserver_windows_vhosts Virtual Host Configuration
+ *
+ * Each installation of Decibel must run within its own virtual host.
+ *
+ * A sample virtual host (<strong>vhost1.net</strong>) will be installed
+ * by default and can be used as a template for additional hosts.
+ *
+ * The following process describes how to configure additional virtual hosts,
+ * allowing multiple instances of Decibel to be run side-by-side. In this
+ * example, a virtual host named <strong>myvhost.local</strong> will be configured:
+ *
+ * - Edit the Apache HTTPD Server virtual host configuration file, located
+ *		at <code>%%SYSTEMDRIVE%\\Decibel\\server\\apache24\\conf\\extra\\httpd-vhosts.conf</code>
+ *		and add the following text to the end of the file:
+ *		<pre>&lt;VirtualHost *:80&gt;
+ *	DocumentRoot "${SRVROOT}/../../www/myvhost.local"
+ *	ServerName myvhost.local
+ *	ErrorLog "logs/myvhost.local.log"
+ *&lt;/VirtualHost&gt;</pre>
+ *
+ * - Edit the the <em>hosts</em> file, located at
+ *		<code>%%SYSTEMDRIVE%\\Windows\\System32\\drivers\\etc\\hosts</code>
+ *		and add the following line:
+ *		<pre>127.0.0.1	myvhost.local</pre>
+ *		@note It is neccessary to open this file with Administrator privileges
+ *		in order to save the changes.
+ *
+ * - Create a folder for the virtual host in the web server root folder,
+ *		in this example <code>%%SYSTEMDRIVE%\\Decibel\\www\\myvhost.local</code>
+ *
+ * - Restart the <em>Decibel - Apache HTTPD</em> service from within the
+ *		Services Management Console.
+ *
+ * - The @ref configuration_installation instructions can now be followed
+ *		to install Decibel in the newly created virtual host.
+ *
+ * @subsection configuration_developmentserver_windows_troubleshooting Troubleshooting Errors
+ *
+ * Should an error occur, error logs can be found in the following locations:
+ * - Apache HTTPD (<code>%%SYSTEMDRIVE%\\Decibel\\server\\apache24\\logs\\[vhost].log</code>)
+ * - MySQL (<code>%%SYSTEMDRIVE%\\Decibel\\server\\mysql56\\data\\[Computer Name].err</code>)
+ * - Decibel (<code>%%SYSTEMDRIVE%\\Decibel\\www\\[vhost]\\error_log</code>)
+ */
+
+/**
+ * @page configuration_installation Decibel Installation
+ *
+ * This page will guide you through the process of downloading, installing
+ * and configuring %Decibel on a development server.
+ *
+ * If is assumed that the server has already been configured to meet
+ * the minimum @ref configuration_requirements for a %Decibel installation.
+ * For instructions on configuring a local development environment suitable
+ * for Decibel, see the @ref configuration_developmentserver guide.
+ *
+ * @section configuration_installation_download Step 1 - Download Decibel
+ *
+ * To download %Decibel, register for an account
+ * at http://portal.decibeltechnology.com
+ *
+ * @note
+ * Some Apache HTTPD installations are not configured to execute Phar packages.
+ * If this is the case, you may need to rename the downloaded package with
+ * the extension <code>.phar.php</code>
+ *
+ * @warning
+ * The downloaded file is a Phar package, or PHP Archive (see http://php.net/phar/).
+ * Don't try to extract the file as it is self-executing.
+ *
+ * @section configuration_installation_vhost Step 2 - Configure a Virtual Host
+ *
+ * Each instance of %Decibel must run in it's own virtual host.
+ *
+ * For more information about configuring virtual hosts in Apache HTTPD server,
+ * see http://httpd.apache.org/docs/2.2/vhosts/
+ *
+ * @note
+ * Ensure the virtual host root folder is owned by the same user account
+ * that Apache will run under.
+ *
+ * @section configuration_installation_installer Step 3 - Run Decibel Installer
+ *
+ * %Decibel will self-install from the downloaded PHAR package.
+ *
+ * - Copy the downloaded Phar package into the root folder of the configured
+ *		virtual host.
+ *
+ *		@image html configuration_installation_installer_01.jpg
+ *
+ * - Browse to the Phar package (for example, enter
+ *		http://myvhost.local/app-Decibel-Decibel_5.6.0_install.phar.php
+ *		into the address bar of a web browser).
+ *
+ *		@image html configuration_installation_installer_02.jpg
+ *
+ * - Click the Extract button. Once all files are extracted, you will
+ *		be automatically redirected to the installer.
+ *
+ *		@note
+ *		If you are unable to extract the PHAR package, you can download a ZIP
+ *		or TAR version of the installer by replacing the <code>.phar.php</code>
+ *		extension with <code>.zip</code> or <code>.tar.gz</code> respectively.
+ *
+ * - The first step will check that the web server has all required components
+ *		installed. If any of the checks fail, please install the required
+ *		component then refresh the page to resume installation.
+ *		See @ref configuration_requirements for further information.
+ *
+ *		@image html configuration_installation_installer_03.jpg
+ *
+ * - You will now need to enter information about the database that will
+ *		be used by %Decibel. If you need to create a completely new database,
+ *		select the first option. If an empty database has already been set up,
+ *		use the second option. The third option should only be used
+ *		if you are connecting a fresh %Decibel installation to an existing
+ *		%Decibel database.
+ *
+ *		@image html configuration_installation_installer_07.jpg
+ *
+ * - Finally, enter the details for a root user account that will be used
+ *		to access %Decibel.
+ *
+ *		@image html configuration_installation_installer_08.jpg
+ *
+ * - This final step might take a few minutes while %Decibel configures
+ *		the database. Once everything is complete, click the Get Started
+ *		button.
+ *
+ *		@image html configuration_installation_installer_09.jpg
+ *
+ * - You will now see the Decibel log in screen. Use the root account you
+ *		configured in the installation process to log in to %Decibel.
+ *
+ *		@image html configuration_installation_installer_10.jpg
+ *
+ * @section configuration_installation_healthcheck Step 4 - Health Check
+ *
+ * Now that you have installed %Decibel, your first task should be to run
+ * the Health Check. This is an automated process that will screen your
+ * %Decibel installation for anything that may cause a problem while you
+ * are working with %Decibel. To start the Health Check, click
+ * the <em>Application > Configuration > Health Check</em> menu item.
+ *
+ * @image html configuration_installation_healthcheck_01.jpg
+ *
+ * @section configuration_installation_update Step 5 - Update
+ *
+ * If you are installing %Decibel from a locally stored package, it is a good
+ * idea to visit the Update screen to ensure that you have the latest version
+ * installed. To do this click the <em>Application > Maintenance > Update</em>
+ * menu item. %Decibel will automatically check for any newer releases.
+ *
+ * @image html configuration_installation_update_01.jpg
+ */
+
+/**
+ * @page configuration_database Application Database Connection
+ *
+ * %Decibel requires access to a MySQL database for storage of application
+ * settings and data.
+ *
+ * Access details must be stored in the file <code>_config/config.db.php</code>,
+ * located in the application root directory. This file defines four constants
+ * used to store the application database connection details, for example:
+ *
+ * @code
+ * <?php
+ * define('DECIBEL_DB_HOSTNAME',	'localhost');
+ * define('DECIBEL_DB_NAME',		'decibelcore');
+ * define('DECIBEL_DB_USERNAME',	'decibel');
+ * define('DECIBEL_DB_PASSWORD',	'password');
+ * @endcode
+ *
+ * @note
+ * This file will be automatically created during the @ref configuration_installation
+ * process, however can be manually edited if connection details change following
+ * installation.
+ *
+ * See @ref database_application in the @ref database Developers Guide
+ * for further information.
+ *
+ * @section configuration_database_privileges Database Privileges
+ *
+ * The MySQL user that %Decibel uses to connect to the database must have
+ * the following privileges:
+ *
+ * - <code>SELECT</code>
+ * - <code>INSERT</code>
+ * - <code>UPDATE</code>
+ * - <code>DELETE</code>
+ * - <code>CREATE</code>
+ * - <code>ALTER</code>
+ * - <code>INDEX</code>
+ * - <code>DROP</code>
+ * - <code>LOCK TABLES</code>
+ *
+ * @section configuration_database_databasestructure Database Structure
+ *
+ * %Decibel manages it's own database structure, and will initialise the database
+ * structure automatically during installation.
+ *
+ * @warning
+ * You should never manually modify the structure of tables in the application
+ * database. See @ref database_application in the @ref database Developers Guide
+ * for further information about database structure.
+ *
+ * @section configuration_database_samplestructure Sample Structure
+ *
+ * The following diagram shows the location of the database configuration file
+ * within a sample file structure.
+ *
+ * @code
+ * \wwwroot
+ *    |- .htaccess
+ *    |- .nginx
+ *    |- _config
+ *    |     |- config.db.php
+ *    |     \- DConfigurationManager
+ *    \- app
+ *         |- decibel
+ *               \- ...
+ *         \- MyApp
+ *               \- ...
+ * @endcode
+ */
+
+/**
+ * @page	toolkit Decibel Toolkit
+ *
+ * %Decibel Toolkit is a Decibel App that provides tools that can be used
+ * to assist developers when creating and maintaining a %Decibel application.
+ *
+ * The Toolkit can be downloaded and installed from the
+ * <em>Application > Maintenance > Decibel Update</em> menu within
+ * the Decibel CMS administration console.
+ */
+
+/**
+ * @page netbeans Decibel Framework Plug-in for NetBeans IDE
+ *
+ * The Decibel Framework plug-in for NetBeans IDE is a wrapper of the @ref toolkit
+ * to expedite development of %Decibel applications within the NetBeans IDE.
+ *
+ * @section netbeans_installation Installation
+ *
+ * The plug-in can be downloaded from the following locations:
+ * - For NetBeans 7.3.1 (http://code.decibeltechnology.com/netbeans/7.3.1/org-decibeltechnology-decibel.nbm)
+ * - For NetBeans 7.4 (http://code.decibeltechnology.com/netbeans/7.4/org-decibeltechnology-decibel.nbm)
+ *
+ * To install the plug-in in NetBeans, select the <em>Tools > Plugins</em> menu
+ * option, select the <em>Downloaded</em> tab and then click the <em>Add Plugins</em>
+ * button. After uploading the applicable NBM file downloaded from the locations
+ * shown above, you should see the following screen:
+ *
+ * @image html netbeans_installation_01.jpg
+ *
+ * Select the checkbox to the left of the <strong>PHP Decibel Framework</strong>
+ * plug-in, then click the <em>Install</em> button to complete the installation.
+ *
+ * @section netbeans_usage Usage
+ *
+ * Once installed, projects containing the Decibel Framework will be recognised
+ * by NetBeans, and a Decibel logo will be shown on the project in the
+ * <em>Projects</em> tab:
+ *
+ * @image html netbeans_usage_01.jpg
+ *
+ * Right-clicking on the project title will expose the <em>Decibel</em> menu,
+ * which contains two options, <em>Run Command</em> and <em>Clear Cache</em>.
+ *
+ * @image html netbeans_usage_02.jpg
+ *
+ * @subsection netbeans_usage_runcommand Run Command
+ *
+ * This option allows the execution of various maintenance tasks on the project.
+ * Select the required task, then click the <em>Run</em> button to execute.
+ *
+ * @image html netbeans_usage_runcommand_01.jpg
+ *
+ * Output of the command will be shown in the <strong>Output</strong> window.
+ *
+ * @image html netbeans_usage_runcommand_02.jpg
+ *
+ * @subsection netbeans_usage_clearcache Clear Cache
+ *
+ * The <em>Clear Cache</em> option is a shortcut to clear the Decibel cache.
+ * This command can also be executed by using the <em>Alt-Shift-Del</em> shortcut
+ * key combination while editing any file within the project.
+ */
+

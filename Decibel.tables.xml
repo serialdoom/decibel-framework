@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tables>
+	<table name="decibel_application_dconfigurationmanager">
+		<field name="qualifiedName" type="varchar" size="100" null="true"/>
+		<field name="name" type="varchar" size="100" null="false"/>
+		<field name="value" type="text" null="false"/>
+		<index type="PRIMARY" name="PRIMARY" fields="name"/>
+	</table>
+	<table name="decibel_authorise_dauthentication">
+		<field name="user" type="bigint" unsigned="true" null="false"/>
+		<field name="time" type="datetime" null="false"/>
+		<field name="sessionid" type="char" size="250" null="false"/>
+		<field name="expiryTime" type="smallint" unsigned="true" null="false"/>
+		<index type="PRIMARY" name="PRIMARY" fields="user,time,sessionid"/>
+		<index type="INDEX" name="index_sessionid" fields="sessionid"/>
+	</table>
+	<table name="decibel_cache_ddatabasecache">
+		<field name="key" type="varchar" size="255" null="false"/>
+		<field name="value" type="mediumblob" null="false"/>
+		<field name="expiry" type="int" unsigned="true" null="false"/>
+		<index type="PRIMARY" name="PRIMARY" fields="key"/>
+	</table>
+	<table name="decibel_model_field_darrayfield">
+		<field name="id" type="bigint" unsigned="true" null="false"/>
+		<field name="field" type="varchar" size="60" null="false"/>
+		<field name="key" type="varchar" size="255" null="false"/>
+		<field name="value" type="text" null="false"/>
+		<index type="INDEX" name="index_field" fields="id,field"/>
+	</table>
+	<table name="decibel_model_field_dlinkedobjectsfield">
+		<field name="from" type="bigint" unsigned="true" null="false"/>
+		<field name="field" type="varchar" size="60" null="false"/>
+		<field name="to" type="bigint" unsigned="true" null="false"/>
+		<field name="position" type="mediumint" unsigned="true" null="false"/>
+		<index type="PRIMARY" name="PRIMARY" fields="from,field,to"/>
+		<index type="INDEX" name="index_field" fields="field"/>
+		<index type="INDEX" name="index_from" fields="from"/>
+		<index type="INDEX" name="index_to" fields="to"/>
+		<!-- Optimises the App_LinkedObject_getFor query -->
+		<index type="INDEX" name="index_load" fields="from,field,position"/>
+	</table>
+	<table name="decibel_task_dqueue">
+		<field name="id" type="bigint" unsigned="true" null="false" autoincrement="true"/>
+		<field name="guid" type="varchar" size="32" null="true"/>
+		<field name="queue" type="varchar" size="100" null="false"/>
+		<field name="task" type="varchar" size="100" null="false"/>
+		<field name="queued" type="int" unsigned="true" null="false"/>
+		<field name="owner" type="bigint" unsigned="true" null="false"/>
+		<field name="fieldValues" type="text" null="false"/>
+		<field name="started" type="int" unsigned="true" null="true"/>
+		<field name="processId" type="int" unsigned="true" null="true"/>
+		<field name="progress" type="tinyint" unsigned="true" null="true"/>
+		<index type="PRIMARY" name="PRIMARY" fields="id"/>
+		<index type="INDEX" name="index_queue" fields="queue"/>
+	</table>
+</tables>

@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @defgroup caching Caching
+ *
+ * This group contains classes available for performance optimising
+ * %Decibel through caching.
+ *
+ * Detailed information about utilising caching functionality is available
+ * in the @ref performance Developer Guide.
+ */
+
+/**
+ * @page performance Caching and Performance Optimisation
+ *
+ * - @subpage performance_profiling
+ * - @subpage performance_optimisation
+ * - @subpage performance_pruning
+ * - @subpage performance_shmcache
+ */
+
+/**
+ * @page performance_shmcache Shared Memory Caching
+ *
+ * A shared memory cache improves the performance of a %Decibel website
+ * by allowing the results of expensive operations to be cached across
+ * different page requests.
+ */
