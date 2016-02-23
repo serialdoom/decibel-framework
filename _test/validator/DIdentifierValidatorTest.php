@@ -1,5 +1,5 @@
 <?php
-namespace Decibel\Tests\validator;
+namespace tests\decibel\validator;
 
 use app\decibel\test\DTestCase;
 use app\decibel\validator\DIdentifierValidator;
