@@ -143,13 +143,13 @@ abstract class DPharRepository implements DDebuggable
         if ($this->availableHives === null) {
             // Previously used $this->archive->getPathname(), however
             // sometimes this returned null.
-            $root = 'phar://' . DECIBEL_PATH . $this->relativePath . $this->filename;
+            $root = 'phar://' . str_replace(DIRECTORY_SEPARATOR, '/', $this->getFilename());
             $iterator = new RecursiveIteratorIterator($this->archive);
             $this->availableHives = array();
             foreach ($iterator as $hive) {
                 /* @var $hive SplFileInfo */
                 $filename = str_replace($root, '', $hive->getPathname());
-                $this->availableHives[] = str_replace('/', '\\', trim($filename, '/'));
+                $this->availableHives[] = str_replace('/', NAMESPACE_SEPARATOR, trim($filename, '/'));
             }
         }
 
@@ -289,7 +289,7 @@ abstract class DPharRepository implements DDebuggable
         // Obtain an exclusive lock on the registry
         // before starting to write any content.
         $this->getLock(true);
-        $path = str_replace('\\', '/', $qualifiedName);
+        $path = str_replace(NAMESPACE_SEPARATOR, '/', $qualifiedName);
         try {
             $this->archive[ $path ] = serialize($hive);
             // If something goes wrong, log the error and continue.
