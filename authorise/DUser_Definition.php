@@ -101,7 +101,7 @@ class DUser_Definition extends DModel_Definition
         $timezone->setExportGroup($labelRegionalDetails);
         $this->addField($timezone);
         $language = new DEnumStringField('language', 'Language');
-        $language->setDefault('getDefaultLanguage');
+        $language->setDefault(self::getDefaultLanguage());
         $language->setDescription('<p>The language this user speaks.</p>');
         $language->setValues(DLanguage::getLanguageNames());
         $language->setMaxLength(5);

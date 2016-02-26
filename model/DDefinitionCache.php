@@ -10,6 +10,7 @@ use app\decibel\debug\DException;
 use app\decibel\model\database\DDatabaseMapper;
 use app\decibel\registry\DClassQuery;
 use app\decibel\registry\DInvalidClassNameException;
+use ReflectionClass;
 
 /**
  * Provides caching functionality for definitions.
@@ -61,6 +62,10 @@ trait DDefinitionCache
     {
         // Find and load the definition.
         try {
+            $reflectionClass = new ReflectionClass($definition);
+            if ($reflectionClass->isAbstract()) {
+                return null;
+            }
             self::$definitions[ $definable ] = new $definition($definable);
             // If an exception is triggered, append the name of the
             // definition it occured in.

@@ -10,6 +10,7 @@ use app\decibel\cache\DPublicCache;
 use app\decibel\database\DTableManifest;
 use app\decibel\database\schema\DTableDefinition;
 use app\decibel\event\DEventDispatcher;
+use app\decibel\model\DBaseModel;
 use app\decibel\model\DModel;
 use app\decibel\registry\DClassQuery;
 use app\decibel\registry\DFileInformation;
@@ -323,13 +324,14 @@ class DAppManager implements DSingleton
                 }
             }
         }
-        // Load abstract model definitions to diff their database tables.
+        /** @var string Loads abstract model definitions to diff their database tables. */
         $abstractModels = DClassQuery::load()
-                                     ->setAncestor(DModel::class)
+                                     ->setAncestor(DBaseModel::class)
                                      ->setFilter(DClassQuery::FILTER_ABSTRACT)
                                      ->getClassNames();
         foreach ($abstractModels as $abstractModel) {
-            $abstractModel::getDefinition();
+            /** @var DBaseModel */
+            call_user_func(array($abstractModel, 'getDefinition'));
         }
     }
 }
