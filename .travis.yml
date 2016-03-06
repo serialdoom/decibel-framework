@@ -8,6 +8,6 @@ php:
   - nightly
 
 script:
- - apt-get install php-codesniffer
+ - sudo apt-get install php-codesniffer
  - composer update
  - phpcs
